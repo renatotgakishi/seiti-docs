@@ -1,0 +1,61 @@
+---
+title: Bloco Sobre
+description: Biografia com imagem, texto rico e estatísticas
+---
+
+## Configuração
+
+```ts
+// src/blocks/SobreBlock/config.ts
+import { Block } from 'payload'
+
+export const SobreBlock: Block = {
+  slug: 'sobreBlock',
+  interfaceName: 'SobreBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', required: true },
+    { name: 'conteudo', type: 'richText', required: true },
+    { name: 'imagem', type: 'upload', relationTo: 'media' },
+    {
+      name: 'estatisticas',
+      type: 'array',
+      fields: [
+        { name: 'numero', type: 'text', required: true },
+        { name: 'label', type: 'text', required: true },
+      ],
+    },
+  ],
+}
+```
+
+## Componente com RichText
+
+```tsx
+import { SobreBlockType } from '@/payload-types'
+import { RichText } from '@payloadcms/richtext-lexical/react'
+
+export const SobreBlockComponent = (props: SobreBlockType) => {
+  return (
+    <section>
+      <h2>{props.titulo}</h2>
+      <RichText data={props.conteudo} />
+      <div>
+        {props.estatisticas?.map((stat, i) => (
+          <div key={i}>
+            <strong>{stat.numero}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+```
+
+<Note type="info" title="RichText">
+Sempre use `RichText` do `@payloadcms/richtext-lexical/react` para renderizar. Não tente renderizar manualmente.
+</Note>
+
+<CardGrid>
+  <Card title="Próximo: Serviços" href="/portfolio/08-bloco-servicos" description="Array de serviços com ícones" icon="ArrowRight" />
+</CardGrid>

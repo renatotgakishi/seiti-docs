@@ -1,0 +1,65 @@
+---
+title: Bloco Home / Hero
+description: Primeira dobra com impacto - título, subtítulo, CTA e imagem
+---
+
+O bloco mais importante do portfólio. É o que o cliente vê primeiro.
+
+## Configuração
+
+```ts
+// src/blocks/HomeBlock/config.ts
+import { Block } from 'payload'
+
+export const HomeBlock: Block = {
+  slug: 'homeBlock',
+  interfaceName: 'HomeBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', required: true, defaultValue: 'Designer que transforma ideias em produtos' },
+    { name: 'subtitulo', type: 'textarea', required: true },
+    { name: 'textoBotao', type: 'text', defaultValue: 'Ver trabalhos' },
+    { name: 'linkBotao', type: 'text', defaultValue: '#trabalhos' },
+    { name: 'imagem', type: 'upload', relationTo: 'media', required: true },
+  ],
+}
+```
+
+## Componente
+
+```tsx
+// src/blocks/HomeBlock/Component.tsx
+import { HomeBlockType } from '@/payload-types'
+import Image from 'next/image'
+import styles from './styles.module.css'
+
+export const HomeBlockComponent = ({ titulo, subtitulo, textoBotao, linkBotao, imagem }: HomeBlockType) => {
+  return (
+    <section className={styles.hero}>
+      <div className={styles.content}>
+        <h1>{titulo}</h1>
+        <p>{subtitulo}</p>
+        <a href={linkBotao} className={styles.cta}>{textoBotao}</a>
+      </div>
+      <div className={styles.image}>
+        <Image src={(imagem as any)?.url} alt={(imagem as any)?.alt} width={600} height={600} />
+      </div>
+    </section>
+  )
+}
+```
+
+<FileTree>
+  <Folder name="HomeBlock" defaultOpen={true}>
+    <File name="config.ts" />
+    <File name="Component.tsx" />
+    <File name="styles.module.css" />
+  </Folder>
+</FileTree>
+
+<Note type="success" title="Dica de UX">
+Deixe o cliente editar `textoBotao` e `linkBotao`. Muitos portfólios perdem conversão porque o CTA é fixo no código.
+</Note>
+
+<CardGrid>
+  <Card title="Próximo: Bloco Sobre" href="/portfolio/07-bloco-sobre" description="Biografia com layout editável" icon="ArrowRight" />
+</CardGrid>

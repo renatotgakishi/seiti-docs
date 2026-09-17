@@ -385,6 +385,371 @@
     }
   },
   {
+    "slug": "/portfolio/01-introducao",
+    "title": "Introdução",
+    "description": "Visão geral do projeto - o que vamos construir, por que Payload + Next.js e como usar esta documentação",
+    "content": "Bem-vindo à documentação completa para construir um **portfólio profissional, editável e performático** usando **Payload CMS 3.0 + Next.js 15 + TypeScript**.\n\nEssa documentação nasceu de problemas reais: erros de importação de Blocks, CSS que não aplicava, e falta de conteúdo em português sobre Payload.\n\n## O que vamos construir\n\nUm site de portfólio completo com 7 blocos editáveis pelo cliente no painel do Payload.\n\n<Note type=\"info\" title=\"Para quem é esta documentação?\">\n  Para devs que já sabem React/Next básico e querem sair do WordPress/ACF. Se você já tomou `Module not found: Can't resolve '../../blocks/ContatoBlock'`, você está no lugar certo.\n</Note>\n\n## Por que Payload + Next.js?\n\n## Stack final\n\n| Tecnologia | Versão | Uso |\n| :--- | :--- | :--- |\n| Next.js | 16.3.5 | Framework + Turbopack |\n| Payload CMS | 3.x | CMS Headless |\n| TypeScript | 5.x | Tipagem total |\n| Tailwind CSS | 4.x | Estilização |\n| MongoDB / Postgres | - | Banco |\n\n## Estrutura que vamos criar\n\n```bash\nsrc/\n├── blocks/\n│   ├── SobreBlock/\n│   │   ├── config.ts\n│   │   ├── Component.tsx\n│   │   └── styles.module.css\n│   └── RenderBlocks.tsx\n├── collections/\n│   ├── Pages.ts\n│   └── Media.ts\n└── payload.config.ts\n\ncontents/docs/portfolio/\n├── 01-introducao/\n└── 02-instalacao-payload/\n```\n",
+    "_searchMeta": {
+      "cleanContent": "bem-vindo documenta o completa para construir um portf lio profissional edit vel e perform tico usando payload cms 3 0 next js 15 typescript essa documenta o nasceu de problemas reais: erros de importa o de blocks css que n o aplicava e falta de conte do em portugu s sobre payload o que vamos construir um site de portf lio completo com 7 blocos edit veis pelo cliente no painel do payload para devs que j sabem react next b sico e querem sair do wordpress acf se voc j tomou module not found: can t resolve blocks contatoblock voc est no lugar certo por que payload next js stack final tecnologia vers o uso:--- :--- :---next js 16 3 5 framework turbopackpayload cms 3 x cms headlesstypescript 5 x tipagem totaltailwind css 4 x estiliza omongodb postgres - banco estrutura que vamos criar",
+      "headings": [
+        "O que vamos construir",
+        "Por que Payload + Next.js?",
+        "Stack final",
+        "Estrutura que vamos criar"
+      ],
+      "keywords": [
+        "O que vamos construir",
+        "Por que Payload + Next.js?",
+        "Stack final",
+        "Estrutura que vamos criar",
+        "portfólio profissional, editável e performático",
+        "Payload CMS 3.0 + Next.js 15 + TypeScript",
+        "Module not found: Can't resolve '../../blocks/ContatoBlock'",
+        "bash\nsrc/\n├── blocks/\n│   ├── SobreBlock/\n│   │   ├── config.ts\n│   │   ├── Component.tsx\n│   │   └── styles.module.css\n│   └── RenderBlocks.tsx\n├── collections/\n│   ├── Pages.ts\n│   └── Media.ts\n└── payload.config.ts\n\ncontents/docs/portfolio/\n├── 01-introducao/\n└── 02-instalacao-payload/"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/02-instalacao-payload",
+    "title": "Instalação do Payload",
+    "description": "Crie o projeto do zero, configure o banco e faça o primeiro build passar",
+    "content": "Vamos criar o projeto do portfólio do zero. No final você terá o Payload em /admin e o Next em /.\n\n## Pré-requisitos\n\n| Item | Versão mínima | Como verificar |\n| :--- | :--- | :--- |\n| Node.js | 20.9+ | node -v |\n| npm | 10+ | npm -v |\n| Banco | MongoDB Atlas ou Postgres | Vamos criar agora |\n\n## Passo 1 - Criar o projeto\n\n```bash\nnpx create-payload-app@latest meu-portfolio -t website\ncd meu-portfolio\nnpm run dev\n```\n\nSelecione:\n\n* Database: MongoDB\n* Template: website\n\n## Passo 2 - Configure o .env\n\nCrie o arquivo .env na raiz:\n\n```bash\nPAYLOAD_SECRET=seu-secret-super-seguro-aqui-32chars\nDATABASE_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/meu-portfolio\nNEXT_PUBLIC_SERVER_URL=http://localhost:3000\n```\n\n## Passo 3 - Primeiro acesso\n\n```bash\nnpm run dev\n```\n\nAbra http://localhost:3000/admin e crie seu primeiro usuário.\n\n## Passo 4 - Ajustar o payload.config.ts\n\nEsse arquivo causa 90% dos erros Module not found. Use alias absoluto @/.\n\n```ts\n// src/payload.config.ts\nimport { buildConfig } from 'payload'\nimport { mongooseAdapter } from '@payloadcms/db-mongodb'\nimport { lexicalEditor } from '@payloadcms/richtext-lexical'\nimport path from 'path'\nimport { fileURLToPath } from 'url'\n\nconst filename = fileURLToPath(import.meta.url)\nconst dirname = path.dirname(filename)\n\nexport default buildConfig({\n  secret: process.env.PAYLOAD_SECRET!,\n  db: mongooseAdapter({\n    url: process.env.DATABASE_URI!,\n  }),\n  editor: lexicalEditor({}),\n  collections: [],\n  typescript: {\n    outputFile: path.resolve(dirname, 'payload-types.ts'),\n  },\n})\n```\n\n## Passo 5 - Estrutura inicial\n\n```bash\nsrc/\n├── blocks/\n│   ├── HomeBlock/\n│   ├── SobreBlock/\n│   ├── ServicosBlock/\n│   ├── TrabalhosBlock/\n│   ├── DepoimentosBlock/\n│   ├── BlogBlock/\n│   └── ContatoBlock/\n├── collections/\n│   ├── Pages.ts\n│   └── Media.ts\n└── payload.config.ts\n```\n\n## Validação\n\n```bash\nnpm run generate:types\nnpm run build\n```\n\n<CardGrid>\n  <Card title=\"Proximo: Configuracao Next.js\" href=\"/portfolio/03-configuracao-next\" description=\"Configurar App Router, CSS Modules e alias\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "vamos criar o projeto do portf lio do zero no final voc ter o payload em admin e o next em pr -requisitos item vers o m nima como verificar:--- :--- :---node js 20 9 node -vnpm 10 npm -vbanco mongodb atlas ou postgres vamos criar agora passo 1 - criar o projeto selecione: database: mongodb template: website passo 2 - configure o env crie o arquivo env na raiz: passo 3 - primeiro acesso abra http: localhost:3000 admin e crie seu primeiro usu rio passo 4 - ajustar o payload config ts esse arquivo causa 90 dos erros module not found use alias absoluto passo 5 - estrutura inicial valida o",
+      "headings": [
+        "Pré-requisitos",
+        "Passo 1 - Criar o projeto",
+        "Passo 2 - Configure o .env",
+        "Passo 3 - Primeiro acesso",
+        "Passo 4 - Ajustar o payload.config.ts",
+        "Passo 5 - Estrutura inicial",
+        "Validação"
+      ],
+      "keywords": [
+        "Pré-requisitos",
+        "Passo 1 - Criar o projeto",
+        "Passo 2 - Configure o .env",
+        "Passo 3 - Primeiro acesso",
+        "Passo 4 - Ajustar o payload.config.ts",
+        "Passo 5 - Estrutura inicial",
+        "Validação",
+        "bash\nnpx create-payload-app@latest meu-portfolio -t website\ncd meu-portfolio\nnpm run dev",
+        "Selecione:\n\n* Database: MongoDB\n* Template: website\n\n## Passo 2 - Configure o .env\n\nCrie o arquivo .env na raiz:",
+        "bash\nPAYLOAD_SECRET=seu-secret-super-seguro-aqui-32chars\nDATABASE_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/meu-portfolio\nNEXT_PUBLIC_SERVER_URL=http://localhost:3000",
+        "## Passo 3 - Primeiro acesso",
+        "bash\nnpm run dev",
+        "Abra http://localhost:3000/admin e crie seu primeiro usuário.\n\n## Passo 4 - Ajustar o payload.config.ts\n\nEsse arquivo causa 90% dos erros Module not found. Use alias absoluto @/.",
+        "ts\n// src/payload.config.ts\nimport { buildConfig } from 'payload'\nimport { mongooseAdapter } from '@payloadcms/db-mongodb'\nimport { lexicalEditor } from '@payloadcms/richtext-lexical'\nimport path from 'path'\nimport { fileURLToPath } from 'url'\n\nconst filename = fileURLToPath(import.meta.url)\nconst dirname = path.dirname(filename)\n\nexport default buildConfig({\n  secret: process.env.PAYLOAD_SECRET!,\n  db: mongooseAdapter({\n    url: process.env.DATABASE_URI!,\n  }),\n  editor: lexicalEditor({}),\n  collections: [],\n  typescript: {\n    outputFile: path.resolve(dirname, 'payload-types.ts'),\n  },\n})",
+        "## Passo 5 - Estrutura inicial",
+        "bash\nsrc/\n├── blocks/\n│   ├── HomeBlock/\n│   ├── SobreBlock/\n│   ├── ServicosBlock/\n│   ├── TrabalhosBlock/\n│   ├── DepoimentosBlock/\n│   ├── BlogBlock/\n│   └── ContatoBlock/\n├── collections/\n│   ├── Pages.ts\n│   └── Media.ts\n└── payload.config.ts",
+        "## Validação",
+        "bash\nnpm run generate:types\nnpm run build"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/03-configuracao-next",
+    "title": "Configuração Next.js",
+    "description": "Configure App Router, CSS Modules, alias @ e evite o erro de CSS que não aplica",
+    "content": "O Payload já vem com Next.js, mas precisamos ajustar 3 coisas que quebram 90% dos projetos de portfólio.\n\n## O Problema Real\n\n## 1. Alias @/\n\nNo `tsconfig.json`:\n\n```json\n{\n  \"compilerOptions\": {\n    \"baseUrl\": \".\",\n    \"paths\": {\n      \"@/*\": [\"./src/*\"],\n      \"@/payload-types\": [\"./src/payload-types.ts\"]\n    }\n  }\n}\n```\n\n## 2. CSS Modules vs Global\n\nO Next 15 com Turbopack ignora CSS global dentro de `blocks/`. Use sempre CSS Modules.\n\n```tsx\n// Component.tsx - CERTO\nimport styles from './styles.module.css'\nexport const SobreBlock = () => <section className={styles.wrapper}>...\n\n// ERRADO - não vai aplicar\nimport './styles.css'\n```\n\n## 3. next.config.ts essencial\n\n```ts\nimport { withPayload } from '@payloadcms/next/withPayload'\n\nconst nextConfig = {\n  // necessário para Payload 3.0\n  experimental: {\n    reactCompiler: false,\n  },\n}\n\nexport default withPayload(nextConfig)\n```\n\n<CardGrid>\n  <Card title=\"Próximo: Estrutura do Projeto\" href=\"/portfolio/04-estrutura-projeto\" description=\"Organize pastas para nunca mais ter erro de import\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "o payload j vem com next js mas precisamos ajustar 3 coisas que quebram 90 dos projetos de portf lio o problema real alias no tsconfig json: css modules vs global o next 15 com turbopack ignora css global dentro de blocks use sempre css modules next config ts essencial",
+      "headings": [
+        "O Problema Real",
+        "1. Alias @/",
+        "2. CSS Modules vs Global",
+        "3. next.config.ts essencial"
+      ],
+      "keywords": [
+        "O Problema Real",
+        "1. Alias @/",
+        "2. CSS Modules vs Global",
+        "3. next.config.ts essencial",
+        "tsconfig.json",
+        "json\n{\n  \"compilerOptions\": {\n    \"baseUrl\": \".\",\n    \"paths\": {\n      \"@/*\": [\"./src/*\"],\n      \"@/payload-types\": [\"./src/payload-types.ts\"]\n    }\n  }\n}",
+        "## 2. CSS Modules vs Global\n\nO Next 15 com Turbopack ignora CSS global dentro de",
+        ". Use sempre CSS Modules.",
+        "tsx\n// Component.tsx - CERTO\nimport styles from './styles.module.css'\nexport const SobreBlock = () => <section className={styles.wrapper}>...\n\n// ERRADO - não vai aplicar\nimport './styles.css'",
+        "## 3. next.config.ts essencial",
+        "ts\nimport { withPayload } from '@payloadcms/next/withPayload'\n\nconst nextConfig = {\n  // necessário para Payload 3.0\n  experimental: {\n    reactCompiler: false,\n  },\n}\n\nexport default withPayload(nextConfig)"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/04-estrutura-projeto",
+    "title": "Estrutura do Projeto",
+    "description": "A estrutura que evita Module not found e deixa o projeto escalável para cliente",
+    "content": "Essa é a estrutura que usamos em produção e que evita o erro `Can't resolve '../../blocks/ContatoBlock'`.\n\n## Estrutura Final\n\n## Regra de Ouro\n\n<Tabs defaultValue=\"certo\">\n  <TabsList>\n    <TabsTrigger value=\"errado\">ERRADO</TabsTrigger>\n    <TabsTrigger value=\"certo\">CERTO</TabsTrigger>\n  </TabsList>\n\n  <TabsContent value=\"errado\">\n    ```ts\n    // src/app/[slug]/page.tsx\n    import { SobreBlock } from '../../../blocks/SobreBlock/Component'\n    // Quebra no build!\n    ```\n  </TabsContent>\n\n  <TabsContent value=\"certo\">\n    ```ts\n    // src/app/[slug]/page.tsx\n    import { SobreBlock } from '@/blocks/SobreBlock/Component'\n    import { RenderBlocks } from '@/blocks/RenderBlocks'\n    // Sempre funciona\n    ```\n  </TabsContent>\n</Tabs>\n\n## Collections Base\n\n```ts\n// src/collections/Media.ts\nimport { CollectionConfig } from 'payload'\n\nexport const Media: CollectionConfig = {\n  slug: 'media',\n  upload: true,\n  fields: [\n    { name: 'alt', type: 'text', required: true },\n  ],\n}\n```\n\n<CardGrid>\n  <Card title=\"Próximo: Padrão de Blocos\" href=\"/portfolio/05-padrao-blocos\" description=\"O padrão que resolve todos os blocos de uma vez\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "essa a estrutura que usamos em produ o e que evita o erro can t resolve blocks contatoblock estrutura final regra de ouro tabslist tabstrigger value errado errado certo tabslist tabs collections base",
+      "headings": [
+        "Estrutura Final",
+        "Regra de Ouro",
+        "Collections Base"
+      ],
+      "keywords": [
+        "Estrutura Final",
+        "Regra de Ouro",
+        "Collections Base",
+        "Can't resolve '../../blocks/ContatoBlock'",
+        "ts\n    // src/app/[slug]/page.tsx\n    import { SobreBlock } from '../../../blocks/SobreBlock/Component'\n    // Quebra no build!",
+        "</TabsContent>\n\n  <TabsContent value=\"certo\">",
+        "ts\n    // src/app/[slug]/page.tsx\n    import { SobreBlock } from '@/blocks/SobreBlock/Component'\n    import { RenderBlocks } from '@/blocks/RenderBlocks'\n    // Sempre funciona",
+        "</TabsContent>\n</Tabs>\n\n## Collections Base",
+        "ts\n// src/collections/Media.ts\nimport { CollectionConfig } from 'payload'\n\nexport const Media: CollectionConfig = {\n  slug: 'media',\n  upload: true,\n  fields: [\n    { name: 'alt', type: 'text', required: true },\n  ],\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/05-padrao-blocos",
+    "title": "Padrão de Blocos",
+    "description": "O padrão único que vamos repetir nos 7 blocos do portfólio",
+    "content": "Todos os 7 blocos seguem EXATAMENTE o mesmo padrão. Aprenda uma vez, repita 7x.\n\n## Anatomia de um Bloco\n\n### 1. config.ts - O que o cliente edita\n\n```ts\nimport { Block } from 'payload'\n\nexport const SobreBlock: Block = {\n  slug: 'sobreBlock',\n  interfaceName: 'SobreBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true },\n    { name: 'texto', type: 'richText' },\n    { name: 'imagem', type: 'upload', relationTo: 'media' },\n  ],\n}\n```\n\n### 2. Component.tsx - O que o usuário vê\n\n```tsx\nimport { SobreBlockType } from '@/payload-types'\nimport styles from './styles.module.css'\n\nexport const SobreBlockComponent = ({ titulo, texto, imagem }: SobreBlockType) => {\n  return (\n    <section className={styles.wrapper}>\n      <h2>{titulo}</h2>\n      {/* render richText */}\n    </section>\n  )\n}\n```\n\n### 3. Registro no Pages.ts\n\n```ts\n// src/collections/Pages.ts\nimport { SobreBlock } from '@/blocks/SobreBlock/config'\nimport { HomeBlock } from '@/blocks/HomeBlock/config'\n\nexport const Pages: CollectionConfig = {\n  slug: 'pages',\n  fields: [\n    {\n      name: 'blocks',\n      type: 'blocks',\n      blocks: [HomeBlock, SobreBlock /* ... */],\n    },\n  ],\n}\n```\n\n### 4. RenderBlocks.tsx\n\n```tsx\n// src/blocks/RenderBlocks.tsx\nimport { SobreBlockComponent } from '@/blocks/SobreBlock/Component'\nimport { HomeBlockComponent } from '@/blocks/HomeBlock/Component'\n\nconst blockComponents = {\n  sobreBlock: SobreBlockComponent,\n  homeBlock: HomeBlockComponent,\n}\n\nexport const RenderBlocks = ({ blocks }) => {\n  return blocks.map((block, i) => {\n    const Block = blockComponents[block.blockType]\n    return Block ? <Block key={i} {...block} /> : null\n  })\n}\n```\n\n<Steps>\n  <Step title=\"Crie o config.ts\">\n    Defina slug e fields que o cliente vai editar\n  </Step>\n\n  <Step title=\"Gere os types\">\n    `npm run generate:types` - vai criar `SobreBlockType`\n  </Step>\n\n  <Step title=\"Crie o Component.tsx\">\n    Use o type gerado, nunca crie type manual\n  </Step>\n</Steps>\n",
+    "_searchMeta": {
+      "cleanContent": "todos os 7 blocos seguem exatamente o mesmo padr o aprenda uma vez repita 7x anatomia de um bloco config ts - o que o cliente edita component tsx - o que o usu rio v registro no pages ts renderblocks tsx step title crie o config ts defina slug e fields que o cliente vai editar npm run generate:types - vai criar sobreblocktype use o type gerado nunca crie type manual steps",
+      "headings": [
+        "Anatomia de um Bloco"
+      ],
+      "keywords": [
+        "Anatomia de um Bloco",
+        "ts\nimport { Block } from 'payload'\n\nexport const SobreBlock: Block = {\n  slug: 'sobreBlock',\n  interfaceName: 'SobreBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true },\n    { name: 'texto', type: 'richText' },\n    { name: 'imagem', type: 'upload', relationTo: 'media' },\n  ],\n}",
+        "### 2. Component.tsx - O que o usuário vê",
+        "tsx\nimport { SobreBlockType } from '@/payload-types'\nimport styles from './styles.module.css'\n\nexport const SobreBlockComponent = ({ titulo, texto, imagem }: SobreBlockType) => {\n  return (\n    <section className={styles.wrapper}>\n      <h2>{titulo}</h2>\n      {/* render richText */}\n    </section>\n  )\n}",
+        "### 3. Registro no Pages.ts",
+        "ts\n// src/collections/Pages.ts\nimport { SobreBlock } from '@/blocks/SobreBlock/config'\nimport { HomeBlock } from '@/blocks/HomeBlock/config'\n\nexport const Pages: CollectionConfig = {\n  slug: 'pages',\n  fields: [\n    {\n      name: 'blocks',\n      type: 'blocks',\n      blocks: [HomeBlock, SobreBlock /* ... */],\n    },\n  ],\n}",
+        "### 4. RenderBlocks.tsx",
+        "tsx\n// src/blocks/RenderBlocks.tsx\nimport { SobreBlockComponent } from '@/blocks/SobreBlock/Component'\nimport { HomeBlockComponent } from '@/blocks/HomeBlock/Component'\n\nconst blockComponents = {\n  sobreBlock: SobreBlockComponent,\n  homeBlock: HomeBlockComponent,\n}\n\nexport const RenderBlocks = ({ blocks }) => {\n  return blocks.map((block, i) => {\n    const Block = blockComponents[block.blockType]\n    return Block ? <Block key={i} {...block} /> : null\n  })\n}",
+        "<Steps>\n  <Step title=\"Crie o config.ts\">\n    Defina slug e fields que o cliente vai editar\n  </Step>\n\n  <Step title=\"Gere os types\">",
+        "- vai criar"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/06-bloco-home",
+    "title": "Bloco Home / Hero",
+    "description": "Primeira dobra com impacto - título, subtítulo, CTA e imagem",
+    "content": "O bloco mais importante do portfólio. É o que o cliente vê primeiro.\n\n## Configuração\n\n```ts\n// src/blocks/HomeBlock/config.ts\nimport { Block } from 'payload'\n\nexport const HomeBlock: Block = {\n  slug: 'homeBlock',\n  interfaceName: 'HomeBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true, defaultValue: 'Designer que transforma ideias em produtos' },\n    { name: 'subtitulo', type: 'textarea', required: true },\n    { name: 'textoBotao', type: 'text', defaultValue: 'Ver trabalhos' },\n    { name: 'linkBotao', type: 'text', defaultValue: '#trabalhos' },\n    { name: 'imagem', type: 'upload', relationTo: 'media', required: true },\n  ],\n}\n```\n\n## Componente\n\n```tsx\n// src/blocks/HomeBlock/Component.tsx\nimport { HomeBlockType } from '@/payload-types'\nimport Image from 'next/image'\nimport styles from './styles.module.css'\n\nexport const HomeBlockComponent = ({ titulo, subtitulo, textoBotao, linkBotao, imagem }: HomeBlockType) => {\n  return (\n    <section className={styles.hero}>\n      <div className={styles.content}>\n        <h1>{titulo}</h1>\n        <p>{subtitulo}</p>\n        <a href={linkBotao} className={styles.cta}>{textoBotao}</a>\n      </div>\n      <div className={styles.image}>\n        <Image src={(imagem as any)?.url} alt={(imagem as any)?.alt} width={600} height={600} />\n      </div>\n    </section>\n  )\n}\n```\n\n<Note type=\"success\" title=\"Dica de UX\">\n  Deixe o cliente editar `textoBotao` e `linkBotao`. Muitos portfólios perdem conversão porque o CTA é fixo no código.\n</Note>\n",
+    "_searchMeta": {
+      "cleanContent": "o bloco mais importante do portf lio o que o cliente v primeiro configura o componente deixe o cliente editar textobotao e linkbotao muitos portf lios perdem convers o porque o cta fixo no c digo",
+      "headings": [
+        "Configuração",
+        "Componente"
+      ],
+      "keywords": [
+        "Configuração",
+        "Componente",
+        "ts\n// src/blocks/HomeBlock/config.ts\nimport { Block } from 'payload'\n\nexport const HomeBlock: Block = {\n  slug: 'homeBlock',\n  interfaceName: 'HomeBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true, defaultValue: 'Designer que transforma ideias em produtos' },\n    { name: 'subtitulo', type: 'textarea', required: true },\n    { name: 'textoBotao', type: 'text', defaultValue: 'Ver trabalhos' },\n    { name: 'linkBotao', type: 'text', defaultValue: '#trabalhos' },\n    { name: 'imagem', type: 'upload', relationTo: 'media', required: true },\n  ],\n}",
+        "## Componente",
+        "tsx\n// src/blocks/HomeBlock/Component.tsx\nimport { HomeBlockType } from '@/payload-types'\nimport Image from 'next/image'\nimport styles from './styles.module.css'\n\nexport const HomeBlockComponent = ({ titulo, subtitulo, textoBotao, linkBotao, imagem }: HomeBlockType) => {\n  return (\n    <section className={styles.hero}>\n      <div className={styles.content}>\n        <h1>{titulo}</h1>\n        <p>{subtitulo}</p>\n        <a href={linkBotao} className={styles.cta}>{textoBotao}</a>\n      </div>\n      <div className={styles.image}>\n        <Image src={(imagem as any)?.url} alt={(imagem as any)?.alt} width={600} height={600} />\n      </div>\n    </section>\n  )\n}",
+        "<Note type=\"success\" title=\"Dica de UX\">\n  Deixe o cliente editar",
+        "e"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/07-bloco-sobre",
+    "title": "Bloco Sobre",
+    "description": "Biografia com imagem, texto rico e estatísticas",
+    "content": "## Configuração\n\n```ts\n// src/blocks/SobreBlock/config.ts\nimport { Block } from 'payload'\n\nexport const SobreBlock: Block = {\n  slug: 'sobreBlock',\n  interfaceName: 'SobreBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true },\n    { name: 'conteudo', type: 'richText', required: true },\n    { name: 'imagem', type: 'upload', relationTo: 'media' },\n    {\n      name: 'estatisticas',\n      type: 'array',\n      fields: [\n        { name: 'numero', type: 'text', required: true },\n        { name: 'label', type: 'text', required: true },\n      ],\n    },\n  ],\n}\n```\n\n## Componente com RichText\n\n```tsx\nimport { SobreBlockType } from '@/payload-types'\nimport { RichText } from '@payloadcms/richtext-lexical/react'\n\nexport const SobreBlockComponent = (props: SobreBlockType) => {\n  return (\n    <section>\n      <h2>{props.titulo}</h2>\n      <RichText data={props.conteudo} />\n      <div>\n        {props.estatisticas?.map((stat, i) => (\n          <div key={i}>\n            <strong>{stat.numero}</strong>\n            <span>{stat.label}</span>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}\n```\n\n<CardGrid>\n  <Card title=\"Próximo: Serviços\" href=\"/portfolio/08-bloco-servicos\" description=\"Array de serviços com ícones\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "configura o componente com richtext",
+      "headings": [
+        "Configuração",
+        "Componente com RichText"
+      ],
+      "keywords": [
+        "Configuração",
+        "Componente com RichText",
+        "ts\n// src/blocks/SobreBlock/config.ts\nimport { Block } from 'payload'\n\nexport const SobreBlock: Block = {\n  slug: 'sobreBlock',\n  interfaceName: 'SobreBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', required: true },\n    { name: 'conteudo', type: 'richText', required: true },\n    { name: 'imagem', type: 'upload', relationTo: 'media' },\n    {\n      name: 'estatisticas',\n      type: 'array',\n      fields: [\n        { name: 'numero', type: 'text', required: true },\n        { name: 'label', type: 'text', required: true },\n      ],\n    },\n  ],\n}",
+        "## Componente com RichText",
+        "tsx\nimport { SobreBlockType } from '@/payload-types'\nimport { RichText } from '@payloadcms/richtext-lexical/react'\n\nexport const SobreBlockComponent = (props: SobreBlockType) => {\n  return (\n    <section>\n      <h2>{props.titulo}</h2>\n      <RichText data={props.conteudo} />\n      <div>\n        {props.estatisticas?.map((stat, i) => (\n          <div key={i}>\n            <strong>{stat.numero}</strong>\n            <span>{stat.label}</span>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/08-bloco-servicos",
+    "title": "Bloco Serviços",
+    "description": "Lista de serviços editável com ícones e preço opcional",
+    "content": "## Configuração com Array\n\n```ts\n// src/blocks/ServicosBlock/config.ts\nimport { Block } from 'payload'\n\nexport const ServicosBlock: Block = {\n  slug: 'servicosBlock',\n  interfaceName: 'ServicosBlockType',\n  fields: [\n    { name: 'tituloSessao', type: 'text', defaultValue: 'O que eu faço' },\n    {\n      name: 'servicos',\n      type: 'array',\n      minRows: 1,\n      maxRows: 6,\n      fields: [\n        { name: 'titulo', type: 'text', required: true },\n        { name: 'descricao', type: 'textarea', required: true },\n        { name: 'icone', type: 'text', admin: { description: 'Nome do ícone Lucide: Palette, Code, Figma' } },\n      ],\n    },\n  ],\n}\n```\n\n## Componente\n\n```tsx\nexport const ServicosBlockComponent = ({ tituloSessao, servicos }: ServicosBlockType) => {\n  return (\n    <section>\n      <h2>{tituloSessao}</h2>\n      <div className=\"grid grid-cols-3 gap-4\">\n        {servicos?.map((servico, i) => (\n          <div key={i}>\n            <h3>{servico.titulo}</h3>\n            <p>{servico.descricao}</p>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}\n```\n\n<CardGrid>\n  <Card title=\"Próximo: Trabalhos\" href=\"/portfolio/09-bloco-trabalhos\" description=\"Grid de projetos\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "configura o com array componente",
+      "headings": [
+        "Configuração com Array",
+        "Componente"
+      ],
+      "keywords": [
+        "Configuração com Array",
+        "Componente",
+        "ts\n// src/blocks/ServicosBlock/config.ts\nimport { Block } from 'payload'\n\nexport const ServicosBlock: Block = {\n  slug: 'servicosBlock',\n  interfaceName: 'ServicosBlockType',\n  fields: [\n    { name: 'tituloSessao', type: 'text', defaultValue: 'O que eu faço' },\n    {\n      name: 'servicos',\n      type: 'array',\n      minRows: 1,\n      maxRows: 6,\n      fields: [\n        { name: 'titulo', type: 'text', required: true },\n        { name: 'descricao', type: 'textarea', required: true },\n        { name: 'icone', type: 'text', admin: { description: 'Nome do ícone Lucide: Palette, Code, Figma' } },\n      ],\n    },\n  ],\n}",
+        "## Componente",
+        "tsx\nexport const ServicosBlockComponent = ({ tituloSessao, servicos }: ServicosBlockType) => {\n  return (\n    <section>\n      <h2>{tituloSessao}</h2>\n      <div className=\"grid grid-cols-3 gap-4\">\n        {servicos?.map((servico, i) => (\n          <div key={i}>\n            <h3>{servico.titulo}</h3>\n            <p>{servico.descricao}</p>\n          </div>\n        ))}\n      </div>\n    </section>\n  )\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/09-bloco-trabalhos",
+    "title": "Bloco Trabalhos",
+    "description": "Portfólio de projetos com imagem, tags e link externo",
+    "content": "## Configuração\n\n```ts\nexport const TrabalhosBlock: Block = {\n  slug: 'trabalhosBlock',\n  interfaceName: 'TrabalhosBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Trabalhos recentes' },\n    {\n      name: 'projetos',\n      type: 'array',\n      fields: [\n        { name: 'titulo', type: 'text', required: true },\n        { name: 'categoria', type: 'text' },\n        { name: 'imagem', type: 'upload', relationTo: 'media', required: true },\n        { name: 'link', type: 'text' },\n        { name: 'destaque', type: 'checkbox', defaultValue: false },\n      ],\n    },\n  ],\n}\n```\n\n## Filtro no Frontend\n\n```tsx\n'use client'\nimport { useState } from 'react'\n\nexport const TrabalhosBlockComponent = ({ projetos }) => {\n  const [filtro, setFiltro] = useState('todos')\n  const filtrados = filtro === 'todos' ? projetos : projetos.filter(p => p.categoria === filtro)\n  \n  return (\n    <section id=\"trabalhos\">\n      <div>\n        <button onClick={() => setFiltro('todos')}>Todos</button>\n        <button onClick={() => setFiltro('branding')}>Branding</button>\n      </div>\n      <div className=\"grid\">\n        {filtrados?.map((proj, i) => (\n          <a key={i} href={proj.link} target=\"_blank\">\n            <img src={proj.imagem.url} alt={proj.titulo} />\n            <h3>{proj.titulo}</h3>\n          </a>\n        ))}\n      </div>\n    </section>\n  )\n}\n```\n\n<CardGrid>\n  <Card title=\"Próximo: Depoimentos\" href=\"/portfolio/10-bloco-depoimentos\" description=\"Prova social com carrossel\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "configura o filtro no frontend",
+      "headings": [
+        "Configuração",
+        "Filtro no Frontend"
+      ],
+      "keywords": [
+        "Configuração",
+        "Filtro no Frontend",
+        "ts\nexport const TrabalhosBlock: Block = {\n  slug: 'trabalhosBlock',\n  interfaceName: 'TrabalhosBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Trabalhos recentes' },\n    {\n      name: 'projetos',\n      type: 'array',\n      fields: [\n        { name: 'titulo', type: 'text', required: true },\n        { name: 'categoria', type: 'text' },\n        { name: 'imagem', type: 'upload', relationTo: 'media', required: true },\n        { name: 'link', type: 'text' },\n        { name: 'destaque', type: 'checkbox', defaultValue: false },\n      ],\n    },\n  ],\n}",
+        "## Filtro no Frontend",
+        "tsx\n'use client'\nimport { useState } from 'react'\n\nexport const TrabalhosBlockComponent = ({ projetos }) => {\n  const [filtro, setFiltro] = useState('todos')\n  const filtrados = filtro === 'todos' ? projetos : projetos.filter(p => p.categoria === filtro)\n  \n  return (\n    <section id=\"trabalhos\">\n      <div>\n        <button onClick={() => setFiltro('todos')}>Todos</button>\n        <button onClick={() => setFiltro('branding')}>Branding</button>\n      </div>\n      <div className=\"grid\">\n        {filtrados?.map((proj, i) => (\n          <a key={i} href={proj.link} target=\"_blank\">\n            <img src={proj.imagem.url} alt={proj.titulo} />\n            <h3>{proj.titulo}</h3>\n          </a>\n        ))}\n      </div>\n    </section>\n  )\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/10-bloco-depoimentos",
+    "title": "Bloco Depoimentos",
+    "description": "Carrossel de depoimentos de clientes",
+    "content": "## Configuração\n\n```ts\nexport const DepoimentosBlock: Block = {\n  slug: 'depoimentosBlock',\n  interfaceName: 'DepoimentosBlockType',\n  fields: [\n    {\n      name: 'depoimentos',\n      type: 'array',\n      fields: [\n        { name: 'nome', type: 'text', required: true },\n        { name: 'cargo', type: 'text' },\n        { name: 'texto', type: 'textarea', required: true },\n        { name: 'foto', type: 'upload', relationTo: 'media' },\n        { name: 'nota', type: 'number', min: 1, max: 5, defaultValue: 5 },\n      ],\n    },\n  ],\n}\n```\n\n## Componente com Carrossel Simples\n\n```tsx\n'use client'\nimport { useState } from 'react'\n\nexport const DepoimentosBlockComponent = ({ depoimentos }) => {\n  const [ativo, setAtivo] = useState(0)\n  return (\n    <section>\n      <p>\"{depoimentos[ativo]?.texto}\"</p>\n      <strong>{depoimentos[ativo]?.nome}</strong>\n      <span>{depoimentos[ativo]?.cargo}</span>\n      <div>\n        {depoimentos?.map((_, i) => (\n          <button key={i} onClick={() => setAtivo(i)}>{i+1}</button>\n        ))}\n      </div>\n    </section>\n  )\n}\n```\n",
+    "_searchMeta": {
+      "cleanContent": "configura o componente com carrossel simples",
+      "headings": [
+        "Configuração",
+        "Componente com Carrossel Simples"
+      ],
+      "keywords": [
+        "Configuração",
+        "Componente com Carrossel Simples",
+        "ts\nexport const DepoimentosBlock: Block = {\n  slug: 'depoimentosBlock',\n  interfaceName: 'DepoimentosBlockType',\n  fields: [\n    {\n      name: 'depoimentos',\n      type: 'array',\n      fields: [\n        { name: 'nome', type: 'text', required: true },\n        { name: 'cargo', type: 'text' },\n        { name: 'texto', type: 'textarea', required: true },\n        { name: 'foto', type: 'upload', relationTo: 'media' },\n        { name: 'nota', type: 'number', min: 1, max: 5, defaultValue: 5 },\n      ],\n    },\n  ],\n}",
+        "## Componente com Carrossel Simples",
+        "tsx\n'use client'\nimport { useState } from 'react'\n\nexport const DepoimentosBlockComponent = ({ depoimentos }) => {\n  const [ativo, setAtivo] = useState(0)\n  return (\n    <section>\n      <p>\"{depoimentos[ativo]?.texto}\"</p>\n      <strong>{depoimentos[ativo]?.nome}</strong>\n      <span>{depoimentos[ativo]?.cargo}</span>\n      <div>\n        {depoimentos?.map((_, i) => (\n          <button key={i} onClick={() => setAtivo(i)}>{i+1}</button>\n        ))}\n      </div>\n    </section>\n  )\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/11-bloco-blog",
+    "title": "Bloco Blog e Contato",
+    "description": "Dois blocos em um capítulo - listagem de posts e formulário que salva no Payload",
+    "content": "## Parte 1 - BlogBlock\n\n```ts\nexport const BlogBlock: Block = {\n  slug: 'blogBlock',\n  interfaceName: 'BlogBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Últimos artigos' },\n    { name: 'quantidade', type: 'number', defaultValue: 3, max: 9 },\n  ],\n}\n```\n\nO Blog puxa de uma Collection separada `Posts`.\n\n## Parte 2 - ContatoBlock (o que mais dá erro)\n\n```ts\n// src/blocks/ContatoBlock/config.ts\nexport const ContatoBlock: Block = {\n  slug: 'contatoBlock',\n  interfaceName: 'ContatoBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Vamos conversar?' },\n    { name: 'email', type: 'email', required: true },\n    { name: 'whatsapp', type: 'text' },\n  ],\n}\n```\n\n### Formulário que salva no Payload\n\nCrie uma Collection `Mensagens`:\n\n```ts\nexport const Mensagens: CollectionConfig = {\n  slug: 'mensagens',\n  fields: [\n    { name: 'nome', type: 'text', required: true },\n    { name: 'email', type: 'email', required: true },\n    { name: 'mensagem', type: 'textarea', required: true },\n  ],\n}\n```\n\n```tsx\n'use client'\nexport const ContatoBlockComponent = () => {\n  const handleSubmit = async (e) => {\n    e.preventDefault()\n    const formData = new FormData(e.target)\n    await fetch('/api/mensagens', {\n      method: 'POST',\n      body: JSON.stringify(Object.fromEntries(formData)),\n      headers: { 'Content-Type': 'application/json' },\n    })\n    alert('Mensagem enviada!')\n  }\n  return <form onSubmit={handleSubmit}>...</form>\n}\n```\n",
+    "_searchMeta": {
+      "cleanContent": "parte 1 - blogblock o blog puxa de uma collection separada posts parte 2 - contatoblock o que mais d erro formul rio que salva no payload crie uma collection mensagens:",
+      "headings": [
+        "Parte 1 - BlogBlock",
+        "Parte 2 - ContatoBlock (o que mais dá erro)"
+      ],
+      "keywords": [
+        "Parte 1 - BlogBlock",
+        "Parte 2 - ContatoBlock (o que mais dá erro)",
+        "ts\nexport const BlogBlock: Block = {\n  slug: 'blogBlock',\n  interfaceName: 'BlogBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Últimos artigos' },\n    { name: 'quantidade', type: 'number', defaultValue: 3, max: 9 },\n  ],\n}",
+        "O Blog puxa de uma Collection separada",
+        ".\n\n## Parte 2 - ContatoBlock (o que mais dá erro)",
+        "ts\n// src/blocks/ContatoBlock/config.ts\nexport const ContatoBlock: Block = {\n  slug: 'contatoBlock',\n  interfaceName: 'ContatoBlockType',\n  fields: [\n    { name: 'titulo', type: 'text', defaultValue: 'Vamos conversar?' },\n    { name: 'email', type: 'email', required: true },\n    { name: 'whatsapp', type: 'text' },\n  ],\n}",
+        "### Formulário que salva no Payload\n\nCrie uma Collection",
+        ":",
+        "ts\nexport const Mensagens: CollectionConfig = {\n  slug: 'mensagens',\n  fields: [\n    { name: 'nome', type: 'text', required: true },\n    { name: 'email', type: 'email', required: true },\n    { name: 'mensagem', type: 'textarea', required: true },\n  ],\n}",
+        "",
+        "tsx\n'use client'\nexport const ContatoBlockComponent = () => {\n  const handleSubmit = async (e) => {\n    e.preventDefault()\n    const formData = new FormData(e.target)\n    await fetch('/api/mensagens', {\n      method: 'POST',\n      body: JSON.stringify(Object.fromEntries(formData)),\n      headers: { 'Content-Type': 'application/json' },\n    })\n    alert('Mensagem enviada!')\n  }\n  return <form onSubmit={handleSubmit}>...</form>\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/12-bloco-contato/index copy",
+    "title": "Untitled",
+    "description": "",
+    "content": "",
+    "_searchMeta": {
+      "cleanContent": "",
+      "headings": [],
+      "keywords": []
+    }
+  },
+  {
+    "slug": "/portfolio/12-bloco-contato",
+    "title": "12 - Bloco Contato",
+    "description": "",
+    "content": "",
+    "_searchMeta": {
+      "cleanContent": "",
+      "headings": [],
+      "keywords": []
+    }
+  },
+  {
+    "slug": "/portfolio/13-montagem-pages",
+    "title": "Montagem da Page",
+    "description": "Como juntar todos os blocos na Pages collection e renderizar com RenderBlocks",
+    "content": "Agora vamos juntar tudo.\n\n## Pages.ts Final\n\n```ts\n// src/collections/Pages.ts\nimport { CollectionConfig } from 'payload'\nimport { HomeBlock } from '@/blocks/HomeBlock/config'\nimport { SobreBlock } from '@/blocks/SobreBlock/config'\nimport { ServicosBlock } from '@/blocks/ServicosBlock/config'\nimport { TrabalhosBlock } from '@/blocks/TrabalhosBlock/config'\nimport { DepoimentosBlock } from '@/blocks/DepoimentosBlock/config'\nimport { BlogBlock } from '@/blocks/BlogBlock/config'\nimport { ContatoBlock } from '@/blocks/ContatoBlock/config'\n\nexport const Pages: CollectionConfig = {\n  slug: 'pages',\n  admin: { useAsTitle: 'title' },\n  fields: [\n    { name: 'title', type: 'text', required: true },\n    { name: 'slug', type: 'text', required: true, unique: true },\n    {\n      name: 'blocks',\n      type: 'blocks',\n      blocks: [HomeBlock, SobreBlock, ServicosBlock, TrabalhosBlock, DepoimentosBlock, BlogBlock, ContatoBlock],\n    },\n  ],\n}\n```\n\n## RenderBlocks Final\n\n```ts\n// src/blocks/RenderBlocks.tsx\nimport { HomeBlockComponent } from '@/blocks/HomeBlock/Component'\nimport { SobreBlockComponent } from '@/blocks/SobreBlock/Component'\n// ... importe todos\n\nconst components = {\n  homeBlock: HomeBlockComponent,\n  sobreBlock: SobreBlockComponent,\n  servicosBlock: ServicosBlockComponent,\n  trabalhosBlock: TrabalhosBlockComponent,\n  depoimentosBlock: DepoimentosBlockComponent,\n  blogBlock: BlogBlockComponent,\n  contatoBlock: ContatoBlockComponent,\n}\n\nexport const RenderBlocks = ({ blocks }) => {\n  return blocks?.map((block, i) => {\n    const Comp = components[block.blockType]\n    return Comp ? <Comp key={i} {...block} /> : null\n  })\n}\n```\n\n## page.tsx Final\n\n```tsx\n// src/app/(frontend)/[slug]/page.tsx\nimport { getPayload } from 'payload'\nimport config from '@/payload.config'\nimport { RenderBlocks } from '@/blocks/RenderBlocks'\nimport { notFound } from 'next/navigation'\n\nexport default async function Page({ params }) {\n  const { slug } = await params\n  const payload = await getPayload({ config })\n  const page = await payload.find({\n    collection: 'pages',\n    where: { slug: { equals: slug || 'home' } },\n  })\n  \n  if (!page.docs[0]) return notFound()\n  \n  return <RenderBlocks blocks={page.docs[0].blocks} />\n}\n```\n\n<CardGrid>\n  <Card title=\"Próximo: SEO\" href=\"/portfolio/14-seo-performance\" description=\"Metadata dinâmica\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "agora vamos juntar tudo pages ts final renderblocks final page tsx final",
+      "headings": [
+        "Pages.ts Final",
+        "RenderBlocks Final",
+        "page.tsx Final"
+      ],
+      "keywords": [
+        "Pages.ts Final",
+        "RenderBlocks Final",
+        "page.tsx Final",
+        "ts\n// src/collections/Pages.ts\nimport { CollectionConfig } from 'payload'\nimport { HomeBlock } from '@/blocks/HomeBlock/config'\nimport { SobreBlock } from '@/blocks/SobreBlock/config'\nimport { ServicosBlock } from '@/blocks/ServicosBlock/config'\nimport { TrabalhosBlock } from '@/blocks/TrabalhosBlock/config'\nimport { DepoimentosBlock } from '@/blocks/DepoimentosBlock/config'\nimport { BlogBlock } from '@/blocks/BlogBlock/config'\nimport { ContatoBlock } from '@/blocks/ContatoBlock/config'\n\nexport const Pages: CollectionConfig = {\n  slug: 'pages',\n  admin: { useAsTitle: 'title' },\n  fields: [\n    { name: 'title', type: 'text', required: true },\n    { name: 'slug', type: 'text', required: true, unique: true },\n    {\n      name: 'blocks',\n      type: 'blocks',\n      blocks: [HomeBlock, SobreBlock, ServicosBlock, TrabalhosBlock, DepoimentosBlock, BlogBlock, ContatoBlock],\n    },\n  ],\n}",
+        "## RenderBlocks Final",
+        "ts\n// src/blocks/RenderBlocks.tsx\nimport { HomeBlockComponent } from '@/blocks/HomeBlock/Component'\nimport { SobreBlockComponent } from '@/blocks/SobreBlock/Component'\n// ... importe todos\n\nconst components = {\n  homeBlock: HomeBlockComponent,\n  sobreBlock: SobreBlockComponent,\n  servicosBlock: ServicosBlockComponent,\n  trabalhosBlock: TrabalhosBlockComponent,\n  depoimentosBlock: DepoimentosBlockComponent,\n  blogBlock: BlogBlockComponent,\n  contatoBlock: ContatoBlockComponent,\n}\n\nexport const RenderBlocks = ({ blocks }) => {\n  return blocks?.map((block, i) => {\n    const Comp = components[block.blockType]\n    return Comp ? <Comp key={i} {...block} /> : null\n  })\n}",
+        "## page.tsx Final",
+        "tsx\n// src/app/(frontend)/[slug]/page.tsx\nimport { getPayload } from 'payload'\nimport config from '@/payload.config'\nimport { RenderBlocks } from '@/blocks/RenderBlocks'\nimport { notFound } from 'next/navigation'\n\nexport default async function Page({ params }) {\n  const { slug } = await params\n  const payload = await getPayload({ config })\n  const page = await payload.find({\n    collection: 'pages',\n    where: { slug: { equals: slug || 'home' } },\n  })\n  \n  if (!page.docs[0]) return notFound()\n  \n  return <RenderBlocks blocks={page.docs[0].blocks} />\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/14-seo-performance",
+    "title": "SEO e Performance",
+    "description": "Metadata dinâmica puxando do Payload e otimização de imagens",
+    "content": "## SEO Dinâmico\n\n```tsx\n// src/app/(frontend)/[slug]/page.tsx\nexport async function generateMetadata({ params }) {\n  const payload = await getPayload({ config })\n  const page = await payload.find({\n    collection: 'pages',\n    where: { slug: { equals: params.slug } },\n  })\n  \n  return {\n    title: page.docs[0]?.title,\n    description: page.docs[0]?.meta?.description,\n    openGraph: {\n      images: [page.docs[0]?.meta?.image?.url],\n    },\n  }\n}\n```\n\n## Adicione campo SEO no Pages.ts\n\n```ts\n{\n  name: 'meta',\n  type: 'group',\n  fields: [\n    { name: 'title', type: 'text' },\n    { name: 'description', type: 'textarea' },\n    { name: 'image', type: 'upload', relationTo: 'media' },\n  ],\n}\n```\n\n## Performance\n\n<CardGrid>\n  <Card title=\"Próximo: Deploy\" href=\"/portfolio/15-deploy\" description=\"Subir para produção\" icon=\"ArrowRight\" />\n</CardGrid>\n",
+    "_searchMeta": {
+      "cleanContent": "seo din mico adicione campo seo no pages ts performance",
+      "headings": [
+        "SEO Dinâmico",
+        "Adicione campo SEO no Pages.ts",
+        "Performance"
+      ],
+      "keywords": [
+        "SEO Dinâmico",
+        "Adicione campo SEO no Pages.ts",
+        "Performance",
+        "tsx\n// src/app/(frontend)/[slug]/page.tsx\nexport async function generateMetadata({ params }) {\n  const payload = await getPayload({ config })\n  const page = await payload.find({\n    collection: 'pages',\n    where: { slug: { equals: params.slug } },\n  })\n  \n  return {\n    title: page.docs[0]?.title,\n    description: page.docs[0]?.meta?.description,\n    openGraph: {\n      images: [page.docs[0]?.meta?.image?.url],\n    },\n  }\n}",
+        "## Adicione campo SEO no Pages.ts",
+        "ts\n{\n  name: 'meta',\n  type: 'group',\n  fields: [\n    { name: 'title', type: 'text' },\n    { name: 'description', type: 'textarea' },\n    { name: 'image', type: 'upload', relationTo: 'media' },\n  ],\n}"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio/15-deploy",
+    "title": "Deploy",
+    "description": "Como fazer deploy na Vercel com Payload + MongoDB Atlas",
+    "content": "## Checklist Final\n\n## Comandos\n\n```bash\nnpm run generate:types\nnpm run build\nvercel --prod\n```\n\n<Note type=\"success\" title=\"Parabéns!\">\n  Você construiu um portfólio completo, editável pelo cliente, com 7 blocos, SEO dinâmico e deploy. Agora é só adicionar projetos reais no /admin.\n</Note>\n",
+    "_searchMeta": {
+      "cleanContent": "checklist final comandos voc construiu um portf lio completo edit vel pelo cliente com 7 blocos seo din mico e deploy agora s adicionar projetos reais no admin",
+      "headings": [
+        "Checklist Final",
+        "Comandos"
+      ],
+      "keywords": [
+        "Checklist Final",
+        "Comandos",
+        "bash\nnpm run generate:types\nnpm run build\nvercel --prod"
+      ]
+    }
+  },
+  {
+    "slug": "/portfolio",
+    "title": "Portfólio com Payload CMS",
+    "description": "Do zero ao portfólio completo com Next.js, Payload e Blocos reutilizáveis",
+    "content": "Bem-vindo à documentação completa de como construir um portfólio profissional usando Payload CMS + Next.js.\n\nAqui você vai ver desde a instalação até cada bloco: Home, Sobre, Serviços, Trabalhos, Depoimentos, Blog e Contato.\n\n> Essa documentação foi criada para ajudar a comunidade brasileira com conteúdo que não existe em português.\n",
+    "_searchMeta": {
+      "cleanContent": "bem-vindo documenta o completa de como construir um portf lio profissional usando payload cms next js aqui voc vai ver desde a instala o at cada bloco: home sobre servi os trabalhos depoimentos blog e contato essa documenta o foi criada para ajudar a comunidade brasileira com conte do que n o existe em portugu s",
+      "headings": [],
+      "keywords": []
+    }
+  },
+  {
     "slug": "/random",
     "title": "Introduction",
     "description": "This section provides an overview of Introduction.",
@@ -443,9 +808,9 @@
     "slug": "/structure/deep",
     "title": "Introduction",
     "description": "This section provides an overview of Introduction.",
-    "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime, molestiae, facilis aperiam et, error illum vel ullam? Quis architecto dolore ullam\n\n* \\[x] Write the press release\n* \\[ ] Update the website\n* \\[ ] Contact the media\n\n| Syntax        | Description |   Test Text |\r\n| :------------ | :---------: | ----------: |\r\n| Header        |    Title    | Here's this |\r\n| Paragraph     |    Text     |    And more |\r\n| Strikethrough |             |    ~~Text~~ |\n\n## Getting Started\n\nTo begin using the Documentation Template, follow these simple steps:\n\n* Start by cloning the repository to your local machine.\n\nLorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit quae iure nulla deserunt dolore quam pariatur minus sapiente accusantium. Optio, necessitatibus sequi. Veritatis, aspernatur? Possimus quis repellat eum vitae eveniet.\n\n## Blockquotes\n\nBlockquotes are useful for emphasizing key points or quoting external sources:\n\n> \"Documentation is a love letter that you write to your future self.\" - Damian Conway\n\nFeel free to use blockquotes to highlight important information or quotes relevant to your documentation.\n\n## Code Examples with switch\n\nHere a custom tab component from shadcn ui is used.\n\n## Conclusion\n\nThank you for choosing the Documentation Template for your project. Whether you're documenting software, APIs, or processes, we're here to support you in creating clear and effective documentation. Happy documenting!\n\n## Tabs Example\n",
+    "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime, molestiae, facilis aperiam et, error illum vel ullam? Quis architecto dolore ullam\n\n* \\[x] Write the press release\n* \\[ ] Update the website\n* \\[ ] Contact the media\n\n| Syntax        | Description |   Test Text |\n| :------------ | :---------: | ----------: |\n| Header        |    Title    | Here's this |\n| Paragraph     |    Text     |    And more |\n| Strikethrough |             |    ~~Text~~ |\n\n## Getting Started\n\nTo begin using the Documentation Template, follow these simple steps:\n\n* Start by cloning the repository to your local machine.\n\nLorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit quae iure nulla deserunt dolore quam pariatur minus sapiente accusantium. Optio, necessitatibus sequi. Veritatis, aspernatur? Possimus quis repellat eum vitae eveniet.\n\n## Blockquotes\n\nBlockquotes are useful for emphasizing key points or quoting external sources:\n\n> \"Documentation is a love letter that you write to your future self.\" - Damian Conway\n\nFeel free to use blockquotes to highlight important information or quotes relevant to your documentation.\n\n## Code Examples with switch\n\nHere a custom tab component from shadcn ui is used.\n\n## Conclusion\n\nThank you for choosing the Documentation Template for your project. Whether you're documenting software, APIs, or processes, we're here to support you in creating clear and effective documentation. Happy documenting!\n\n## Tabs Example\n",
     "_searchMeta": {
-      "cleanContent": "lorem ipsum dolor sit amet consectetur adipisicing elit numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime molestiae facilis aperiam et error illum vel ullam quis architecto dolore ullam x write the press release update the website contact the media syntax description test text :------------ :---------: ----------: header title here s this paragraph text and more strikethrough text getting started to begin using the documentation template follow these simple steps: start by cloning the repository to your local machine lorem ipsum dolor sit amet consectetur adipisicing elit reprehenderit quae iure nulla deserunt dolore quam pariatur minus sapiente accusantium optio necessitatibus sequi veritatis aspernatur possimus quis repellat eum vitae eveniet blockquotes blockquotes are useful for emphasizing key points or quoting external sources: documentation is a love letter that you write to your future self - damian conway feel free to use blockquotes to highlight important information or quotes relevant to your documentation code examples with switch here a custom tab component from shadcn ui is used conclusion thank you for choosing the documentation template for your project whether you re documenting software apis or processes we re here to support you in creating clear and effective documentation happy documenting tabs example",
+      "cleanContent": "lorem ipsum dolor sit amet consectetur adipisicing elit numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime molestiae facilis aperiam et error illum vel ullam quis architecto dolore ullam x write the press release update the website contact the media syntax description test text:------------ :---------: ----------:header title here s thisparagraph text and morestrikethrough text getting started to begin using the documentation template follow these simple steps: start by cloning the repository to your local machine lorem ipsum dolor sit amet consectetur adipisicing elit reprehenderit quae iure nulla deserunt dolore quam pariatur minus sapiente accusantium optio necessitatibus sequi veritatis aspernatur possimus quis repellat eum vitae eveniet blockquotes blockquotes are useful for emphasizing key points or quoting external sources: documentation is a love letter that you write to your future self - damian conway feel free to use blockquotes to highlight important information or quotes relevant to your documentation code examples with switch here a custom tab component from shadcn ui is used conclusion thank you for choosing the documentation template for your project whether you re documenting software apis or processes we re here to support you in creating clear and effective documentation happy documenting tabs example",
       "headings": [
         "Getting Started",
         "Blockquotes",

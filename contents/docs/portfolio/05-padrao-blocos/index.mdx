@@ -1,0 +1,107 @@
+---
+title: Padrão de Blocos
+description: O padrão único que vamos repetir nos 7 blocos do portfólio
+---
+
+Todos os 7 blocos seguem EXATAMENTE o mesmo padrão. Aprenda uma vez, repita 7x.
+
+## Anatomia de um Bloco
+
+<FileTree>
+  <Folder name="SobreBlock" defaultOpen={true}>
+    <File name="config.ts" />
+    <File name="Component.tsx" />
+    <File name="styles.module.css" />
+  </Folder>
+</FileTree>
+
+### 1. config.ts - O que o cliente edita
+
+```ts
+import { Block } from 'payload'
+
+export const SobreBlock: Block = {
+  slug: 'sobreBlock',
+  interfaceName: 'SobreBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', required: true },
+    { name: 'texto', type: 'richText' },
+    { name: 'imagem', type: 'upload', relationTo: 'media' },
+  ],
+}
+```
+
+### 2. Component.tsx - O que o usuário vê
+
+```tsx
+import { SobreBlockType } from '@/payload-types'
+import styles from './styles.module.css'
+
+export const SobreBlockComponent = ({ titulo, texto, imagem }: SobreBlockType) => {
+  return (
+    <section className={styles.wrapper}>
+      <h2>{titulo}</h2>
+      {/* render richText */}
+    </section>
+  )
+}
+```
+
+### 3. Registro no Pages.ts
+
+```ts
+// src/collections/Pages.ts
+import { SobreBlock } from '@/blocks/SobreBlock/config'
+import { HomeBlock } from '@/blocks/HomeBlock/config'
+
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  fields: [
+    {
+      name: 'blocks',
+      type: 'blocks',
+      blocks: [HomeBlock, SobreBlock /* ... */],
+    },
+  ],
+}
+```
+
+### 4. RenderBlocks.tsx
+
+```tsx
+// src/blocks/RenderBlocks.tsx
+import { SobreBlockComponent } from '@/blocks/SobreBlock/Component'
+import { HomeBlockComponent } from '@/blocks/HomeBlock/Component'
+
+const blockComponents = {
+  sobreBlock: SobreBlockComponent,
+  homeBlock: HomeBlockComponent,
+}
+
+export const RenderBlocks = ({ blocks }) => {
+  return blocks.map((block, i) => {
+    const Block = blockComponents[block.blockType]
+    return Block ? <Block key={i} {...block} /> : null
+  })
+}
+```
+
+<Note type="info" title="Por que interfaceName?">
+O Payload gera automaticamente o tipo TypeScript no `payload-types.ts`. Você importa ele no Component, sem duplicar tipagem.
+</Note>
+
+<Steps>
+  <Step title="Crie o config.ts">
+    Defina slug e fields que o cliente vai editar
+  </Step>
+  <Step title="Gere os types">
+    `npm run generate:types` - vai criar `SobreBlockType`
+  </Step>
+  <Step title="Crie o Component.tsx">
+    Use o type gerado, nunca crie type manual
+  </Step>
+</Steps>
+
+<CardGrid>
+  <Card title="Próximo: Bloco Home" href="/portfolio/06-bloco-home" description="Primeiro bloco na prática" icon="Rocket" />
+</CardGrid>

@@ -30,12 +30,15 @@ function isRoute(node: Paths): node is Extract<Paths, { href: string; title: str
 function createSlug(filePath: string): string {
   const relativePath = path.relative(docsDir, filePath)
   const parsed = path.parse(relativePath)
+
   const slugPath = parsed.dir ? `${parsed.dir}/${parsed.name}` : parsed.name
   const normalizedSlug = slugPath.replace(/\\/g, '/')
+
   if (parsed.name === 'index') {
     const dir = parsed.dir.replace(/\\/g, '/')
     return dir ? `/${dir}` : '/'
   }
+
   return `/${normalizedSlug}`
 }
 
@@ -65,22 +68,20 @@ async function ensureDirectoryExists(dir: string) {
 }
 
 function removeCustomComponents() {
-  // FIX: adiciona todas as variações de nome que usamos nos docs
   const customComponentNames = [
     'Tabs',
     'TabsList',
     'TabsTrigger',
-    'TabsContent',
     'pre',
     'Mermaid',
     'Card',
     'CardGrid',
     'Step',
-    'Steps', // plural
+    'Steps',
     'StepItem',
     'Note',
     'FileTree',
-    'Filetree', // t minúsculo
+    'Filetree',
     'Folder',
     'File',
   ]
@@ -96,26 +97,17 @@ function removeCustomComponents() {
         parent.children.splice(index!, 1)
       }
     })
-    // também remove jsx text elements
-    visit(tree, 'mdxJsxTextElement', (node: Node, index: number | null, parent: Parent | null) => {
-      if (
-        isMdxJsxFlowElement(node as any) &&
-        parent &&
-        Array.isArray(parent.children) &&
-        customComponentNames.includes((node as any).name)
-      ) {
-        parent.children.splice(index!, 1)
-      }
-    })
   }
 }
 
 function cleanContentForSearch(content: string): string {
   let cleanedContent = content
+
   cleanedContent = cleanedContent.replace(/```[\s\S]*?```/g, ' ')
   cleanedContent = cleanedContent.replace(/`([^`]+)`/g, '$1')
   cleanedContent = cleanedContent.replace(/#{1,6}\s+(.+)/g, '$1')
   cleanedContent = cleanedContent.replace(/\*\*(.+?)\*\*/g, '$1').replace(/_(.+?)_/g, '$1')
+
   cleanedContent = cleanedContent.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
   cleanedContent = cleanedContent.replace(/\|.*\|[\r\n]?/gm, (match) => {
     return match
@@ -124,13 +116,11 @@ function cleanContentForSearch(content: string): string {
       .map((cell) => cell.trim())
       .join(' ')
   })
-  // FIX: inclui Steps, Filetree, Tabs na regex
+
   cleanedContent = cleanedContent.replace(
-    /<(?:Note|Card|CardGrid|Step|Steps|StepItem|FileTree|Filetree|Folder|File|Mermaid|Tabs|TabsList|TabsTrigger|TabsContent)[^>]*>([\s\S]*?)<\/(?:Note|Card|CardGrid|Step|Steps|StepItem|FileTree|Filetree|Folder|File|Mermaid|Tabs|TabsList|TabsTrigger|TabsContent)>/g,
+    /<(?:Note|Card|Step|FileTree|Folder|File|Mermaid)[^>]*>([\s\S]*?)<\/(?:Note|Card|Step|FileTree|Folder|File|Mermaid)>/g,
     '$1'
   )
-  // remove self-closing tags
-  cleanedContent = cleanedContent.replace(/<(?:File|Folder|Card)[^>]*\/>/g, ' ')
 
   cleanedContent = cleanedContent
     .replace(/^\s*[-*+]\s+/gm, '')
@@ -206,23 +196,17 @@ async function getMdxFiles(dir: string): Promise<string[]> {
 async function convertMdxToJson() {
   try {
     await ensureDirectoryExists(outputDir)
+
     const mdxFiles = await getMdxFiles(docsDir)
     const combinedData = []
 
     for (const file of mdxFiles) {
-      try {
-        const jsonData = await processMdxFile(file)
-        combinedData.push(jsonData)
-      } catch (e) {
-        console.error(`Erro no arquivo: ${file}`)
-        console.error(e)
-        // não para o processo, continua pros outros
-      }
+      const jsonData = await processMdxFile(file)
+      combinedData.push(jsonData)
     }
 
     const combinedOutputPath = path.join(outputDir, 'documents.json')
     await fs.writeFile(combinedOutputPath, JSON.stringify(combinedData, null, 2))
-    console.log(`✅ Gerado com ${combinedData.length} documentos`)
   } catch (err) {
     console.error('Error processing MDX files:', err)
   }

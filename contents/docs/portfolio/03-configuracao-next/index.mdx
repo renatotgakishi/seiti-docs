@@ -1,0 +1,102 @@
+---
+title: Configuração Next.js
+description: Configure App Router, CSS Modules, alias @ e evite o erro de CSS que não aplica
+---
+
+O Payload já vem com Next.js, mas precisamos ajustar 3 coisas que quebram 90% dos projetos de portfólio.
+
+## O Problema Real
+
+<Note type="warning" title="Erro que você já viu">
+`import './styles.css'` não aplica nada, ou `Module not found: @/blocks/...` no build.
+</Note>
+
+## 1. Alias @/
+
+No `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/payload-types": ["./src/payload-types.ts"]
+    }
+  }
+}
+```
+
+<Steps>
+  <Step title="Teste o alias">
+    Crie `src/blocks/test.ts` e importe em `payload.config.ts` com `@/blocks/test`. Se não der erro, o alias funciona.
+  </Step>
+  <Step title="Reinicie o TS Server">
+    No VSCode: Ctrl+Shift+P -> Restart TS Server. Isso evita falso erro vermelho.
+  </Step>
+</Steps>
+
+## 2. CSS Modules vs Global
+
+O Next 15 com Turbopack ignora CSS global dentro de `blocks/`. Use sempre CSS Modules.
+
+<FileTree>
+  <Folder name="blocks" defaultOpen={true}>
+    <Folder name="SobreBlock">
+      <File name="Component.tsx" />
+      <File name="config.ts" />
+      <File name="styles.module.css" />
+    </Folder>
+  </Folder>
+</FileTree>
+
+```tsx
+// Component.tsx - CERTO
+import styles from './styles.module.css'
+export const SobreBlock = () => <section className={styles.wrapper}>...
+
+// ERRADO - não vai aplicar
+import './styles.css'
+```
+
+<Tabs defaultValue="module">
+  <TabsList>
+    <TabsTrigger value="module">CSS Module (use este)</TabsTrigger>
+    <TabsTrigger value="tailwind">Tailwind</TabsTrigger>
+  </TabsList>
+  <TabsContent value="module">
+    ```css
+    .wrapper {
+      padding: 4rem 0;
+      display: grid;
+      gap: 2rem;
+    }
+    ```
+  </TabsContent>
+  <TabsContent value="tailwind">
+    Você pode usar Tailwind direto, mas para portfólio com animações específicas, CSS Module dá mais controle.
+  </TabsContent>
+</Tabs>
+
+## 3. next.config.ts essencial
+
+```ts
+import { withPayload } from '@payloadcms/next/withPayload'
+
+const nextConfig = {
+  // necessário para Payload 3.0
+  experimental: {
+    reactCompiler: false,
+  },
+}
+
+export default withPayload(nextConfig)
+```
+
+<Note type="success" title="Checkpoint">
+Rode `npm run build`. Se passar sem erro de CSS ou alias, pode ir para o próximo.
+</Note>
+
+<CardGrid>
+  <Card title="Próximo: Estrutura do Projeto" href="/portfolio/04-estrutura-projeto" description="Organize pastas para nunca mais ter erro de import" icon="ArrowRight" />
+</CardGrid>

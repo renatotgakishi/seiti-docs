@@ -1,0 +1,95 @@
+---
+title: Estrutura do Projeto
+description: A estrutura que evita Module not found e deixa o projeto escalável para cliente
+---
+
+Essa é a estrutura que usamos em produção e que evita o erro `Can't resolve '../../blocks/ContatoBlock'`.
+
+## Estrutura Final
+
+<FileTree>
+  <Folder name="src" defaultOpen={true}>
+    <Folder name="app" defaultOpen={true}>
+      <Folder name="(frontend)">
+        <Folder name="[slug]">
+          <File name="page.tsx" />
+        </Folder>
+        <File name="layout.tsx" />
+      </Folder>
+      <Folder name="(payload)">
+        <File name="layout.tsx" />
+      </Folder>
+    </Folder>
+    <Folder name="blocks" defaultOpen={true}>
+      <Folder name="RenderBlocks.tsx" />
+      <Folder name="HomeBlock" />
+      <Folder name="SobreBlock" />
+      <Folder name="ServicosBlock" />
+    </Folder>
+    <Folder name="collections" defaultOpen={true}>
+      <File name="Pages.ts" />
+      <File name="Media.ts" />
+    </Folder>
+    <File name="payload.config.ts" />
+    <File name="payload-types.ts" />
+  </Folder>
+</FileTree>
+
+## Regra de Ouro
+
+<Note type="warning" title="Nunca faça import relativo com ../../">
+Sempre use `@/` absoluto. Relativo quebra quando você move o arquivo.
+</Note>
+
+<Tabs defaultValue="certo">
+  <TabsList>
+    <TabsTrigger value="errado">ERRADO</TabsTrigger>
+    <TabsTrigger value="certo">CERTO</TabsTrigger>
+  </TabsList>
+  <TabsContent value="errado">
+    ```ts
+    // src/app/[slug]/page.tsx
+    import { SobreBlock } from '../../../blocks/SobreBlock/Component'
+    // Quebra no build!
+    ```
+  </TabsContent>
+  <TabsContent value="certo">
+    ```ts
+    // src/app/[slug]/page.tsx
+    import { SobreBlock } from '@/blocks/SobreBlock/Component'
+    import { RenderBlocks } from '@/blocks/RenderBlocks'
+    // Sempre funciona
+    ```
+  </TabsContent>
+</Tabs>
+
+## Collections Base
+
+```ts
+// src/collections/Media.ts
+import { CollectionConfig } from 'payload'
+
+export const Media: CollectionConfig = {
+  slug: 'media',
+  upload: true,
+  fields: [
+    { name: 'alt', type: 'text', required: true },
+  ],
+}
+```
+
+<Steps>
+  <Step title="Crie as pastas">
+    ```bash
+    mkdir -p src/blocks/{HomeBlock,SobreBlock,ServicosBlock,TrabalhosBlock,DepoimentosBlock,BlogBlock,ContatoBlock}
+    mkdir -p src/collections
+    ```
+  </Step>
+  <Step title="Crie o RenderBlocks.tsx">
+    Esse arquivo é o coração - ele mapeia o slug do bloco para o Component React.
+  </Step>
+</Steps>
+
+<CardGrid>
+  <Card title="Próximo: Padrão de Blocos" href="/portfolio/05-padrao-blocos" description="O padrão que resolve todos os blocos de uma vez" icon="ArrowRight" />
+</CardGrid>

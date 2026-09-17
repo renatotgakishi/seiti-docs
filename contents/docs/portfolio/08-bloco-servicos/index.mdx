@@ -1,0 +1,63 @@
+---
+title: Bloco Serviços
+description: Lista de serviços editável com ícones e preço opcional
+---
+
+## Configuração com Array
+
+```ts
+// src/blocks/ServicosBlock/config.ts
+import { Block } from 'payload'
+
+export const ServicosBlock: Block = {
+  slug: 'servicosBlock',
+  interfaceName: 'ServicosBlockType',
+  fields: [
+    { name: 'tituloSessao', type: 'text', defaultValue: 'O que eu faço' },
+    {
+      name: 'servicos',
+      type: 'array',
+      minRows: 1,
+      maxRows: 6,
+      fields: [
+        { name: 'titulo', type: 'text', required: true },
+        { name: 'descricao', type: 'textarea', required: true },
+        { name: 'icone', type: 'text', admin: { description: 'Nome do ícone Lucide: Palette, Code, Figma' } },
+      ],
+    },
+  ],
+}
+```
+
+## Componente
+
+```tsx
+export const ServicosBlockComponent = ({ tituloSessao, servicos }: ServicosBlockType) => {
+  return (
+    <section>
+      <h2>{tituloSessao}</h2>
+      <div className="grid grid-cols-3 gap-4">
+        {servicos?.map((servico, i) => (
+          <div key={i}>
+            <h3>{servico.titulo}</h3>
+            <p>{servico.descricao}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+```
+
+<Steps>
+  <Step title="Array no Payload">
+    Use `type: 'array'` sempre que o cliente precisar adicionar/remover itens. Ele ganha botão + no admin.
+  </Step>
+  <Step title="Limite de itens">
+    `maxRows: 6` evita que o cliente crie 20 serviços e quebre o layout.
+  </Step>
+</Steps>
+
+<CardGrid>
+  <Card title="Próximo: Trabalhos" href="/portfolio/09-bloco-trabalhos" description="Grid de projetos" icon="ArrowRight" />
+</CardGrid>

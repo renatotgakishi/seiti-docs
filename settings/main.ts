@@ -1,19 +1,20 @@
-export const url = 'https://rubix-documents.vercel.app'
+export const url = 'https://seiti.com.br'
 export const siteicon = '/icon.png'
 
 export const gtm = 'GTM-XXXXXXX'
 export const gtmconnected = true
 
-export const sitename = 'Documents'
+export const sitename = 'Documentação Seiti'
 export const description =
-  'This comprehensive documentation template, crafted with Next.js and available as open-source, delivers a sleek and responsive design, tailored to meet all your project documentation requirements.'
-export const keywords = ['Next.js', 'documentation', 'Rubix Studios', 'open source', 'SEO']
-export const urlimage = '/images/og-image.png'
-export const imagealt = 'Rubix Studios Documentation'
-export const twitterhandle = '@RubixStudios'
+  'Este modelo de documentação completo, feito com Next.js e disponível como open-source, oferece um design moderno e responsivo, feito para atender a todas as necessidades de documentação do seu projeto.'
+export const keywords = ['Next.js', 'documentation', 'open source', 'SEO', 'Seiti', 'Seiti Docs', 'Seiti Documentation']
+//export const urlimage = '/images/og-image.png'
+export const urlimage = '/seiti_logo_transparent.png'
+export const imagealt = 'Seiti Documentation'
+export const twitterhandle = '@meutwitter'
 
-export const companyname = 'Rubix Studios'
-export const companylink = 'https://rubixstudios.com.au'
+export const companyname = 'Seiti'
+export const companylink = 'https://seiti.com.br'
 
 export const branding = true
 export const rightsidebar = true

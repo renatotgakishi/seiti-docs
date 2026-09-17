@@ -1,0 +1,86 @@
+Roteiro da Documentação: "Do Zero ao Portfólio com Payload CMS + Next.js"
+PARTE 1 - BASE
+1. Introdução
+
+O que vamos construir
+Por que Payload + Next.js e não WordPress / Strapi
+Stack final: Next 15, Payload 3, Mongo/Postgres, Tailwind, TypeScript
+2. Instalação do Payload
+
+Pré-requisitos (Node 20+, pnpm, banco)
+npx create-payload-app
+Estrutura que ele cria
+payload.config.ts explicado linha a linha
+Primeiro npm run dev e acesso ao /admin
+3. Configuração do Next.js no mesmo projeto
+
+App Router vs Pages
+Configurando src/app/(payload) e src/app/(frontend)
+Variáveis de ambiente .env
+Conexão Payload com Next
+PARTE 2 - ESTRUTURA DO PROJETO
+4. Collections vs Globals
+
+O que são Collections
+Criando Users, Media, Pages
+slugField e por que usar
+5. O Padrão de Blocos que vamos usar
+
+Por que cada bloco vira uma pasta: /blocks/NomeBlock/config.ts + /Component.tsx + /styles.module.css
+O erro clássico Can't resolve '../../blocks/ContatoBlock' e como evitar
+RenderBlocks.tsx - o orquestrador
+PARTE 3 - OS BLOCOS (O coração do portfólio)
+Cada bloco com: Objetivo > Campos no config.ts > Component.tsx > styles.module.css > Como aparece no Admin
+
+6. Bloco Home / Hero
+
+hero do Payload + campo de imagem, título, CTA
+Animação simples
+7. Bloco Sobre (o que você já fez)
+
+Campos: titulo, subtitulo, texto1, texto2, citacao, autorCitacao, imagem
+O problema do .content { display: flex } alinhado à esquerda
+Correção: width: 50% + margin: 0 auto + CSS Module
+8. Bloco Serviços
+
+Array de serviços com ícone, título e descrição
+Como usar array field no Payload
+Grid responsivo
+
+9. Bloco Trabalhos / Portfólio
+
+Relação com Collection Trabalhos ou campos diretos
+Filtro por categoria
+Lightbox / modal
+10. Bloco Depoimentos
+
+Nome, foto, cargo, texto
+Carrossel com Embla / Swiper
+11. Bloco Blog
+
+Collection Posts separada
+Relacionamento com Pages
+lexical editor
+12. Bloco Contato
+
+Form com payload + nodemailer / Resend
+Validação, anti-spam
+Mapa
+PARTE 4 - MONTAGEM E FINALIZAÇÃO
+13. Montando a Collection Pages
+
+Como juntar todos os Blocks em Pages/index.ts
+Drag & drop no Admin
+14. SEO e Performance
+
+generateMetadata puxando do Payload
+Imagens com Media component
+generate-content-json do Rubix
+15. Deploy
+
+Deploy na Vercel + Mongo Atlas / Neon
+Variáveis e build
+16. Documentando no Rubix Documents
+
+Criando os itens no menu lateral settings/documents.ts
+Usando Card, CardGrid e ## para gerar o menu da direita automaticamente

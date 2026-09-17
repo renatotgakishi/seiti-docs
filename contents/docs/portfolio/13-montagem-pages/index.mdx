@@ -1,0 +1,99 @@
+---
+title: Montagem da Page
+description: Como juntar todos os blocos na Pages collection e renderizar com RenderBlocks
+---
+
+Agora vamos juntar tudo.
+
+## Pages.ts Final
+
+```ts
+// src/collections/Pages.ts
+import { CollectionConfig } from 'payload'
+import { HomeBlock } from '@/blocks/HomeBlock/config'
+import { SobreBlock } from '@/blocks/SobreBlock/config'
+import { ServicosBlock } from '@/blocks/ServicosBlock/config'
+import { TrabalhosBlock } from '@/blocks/TrabalhosBlock/config'
+import { DepoimentosBlock } from '@/blocks/DepoimentosBlock/config'
+import { BlogBlock } from '@/blocks/BlogBlock/config'
+import { ContatoBlock } from '@/blocks/ContatoBlock/config'
+
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  admin: { useAsTitle: 'title' },
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    { name: 'slug', type: 'text', required: true, unique: true },
+    {
+      name: 'blocks',
+      type: 'blocks',
+      blocks: [HomeBlock, SobreBlock, ServicosBlock, TrabalhosBlock, DepoimentosBlock, BlogBlock, ContatoBlock],
+    },
+  ],
+}
+```
+
+## RenderBlocks Final
+
+```ts
+// src/blocks/RenderBlocks.tsx
+import { HomeBlockComponent } from '@/blocks/HomeBlock/Component'
+import { SobreBlockComponent } from '@/blocks/SobreBlock/Component'
+// ... importe todos
+
+const components = {
+  homeBlock: HomeBlockComponent,
+  sobreBlock: SobreBlockComponent,
+  servicosBlock: ServicosBlockComponent,
+  trabalhosBlock: TrabalhosBlockComponent,
+  depoimentosBlock: DepoimentosBlockComponent,
+  blogBlock: BlogBlockComponent,
+  contatoBlock: ContatoBlockComponent,
+}
+
+export const RenderBlocks = ({ blocks }) => {
+  return blocks?.map((block, i) => {
+    const Comp = components[block.blockType]
+    return Comp ? <Comp key={i} {...block} /> : null
+  })
+}
+```
+
+## page.tsx Final
+
+```tsx
+// src/app/(frontend)/[slug]/page.tsx
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { notFound } from 'next/navigation'
+
+export default async function Page({ params }) {
+  const { slug } = await params
+  const payload = await getPayload({ config })
+  const page = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: slug || 'home' } },
+  })
+  
+  if (!page.docs[0]) return notFound()
+  
+  return <RenderBlocks blocks={page.docs[0].blocks} />
+}
+```
+
+<Steps>
+  <Step title="Gere os types">
+    npm run generate:types
+  </Step>
+  <Step title="Crie a Home no Admin">
+    Vá em /admin -> Pages -> Create -> slug: home -> adicione os blocos
+  </Step>
+  <Step title="Teste">
+    Acesse /home e veja todos os blocos renderizados
+  </Step>
+</Steps>
+
+<CardGrid>
+  <Card title="Próximo: SEO" href="/portfolio/14-seo-performance" description="Metadata dinâmica" icon="ArrowRight" />
+</CardGrid>

@@ -17,7 +17,7 @@ export function Logo() {
         decoding="async"
         height={34}
         loading="lazy"
-        src={Settings.siteicon}
+        src='/logo.png' // {Settings.siteicon}
         title={`${Settings.title} main logo`}
         width={34}
       />

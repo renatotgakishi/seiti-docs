@@ -32,7 +32,7 @@ export function Footer() {
               aria-label="Rubix Studios logo"
               height={30}
               priority={false}
-              src="/logo.svg"
+              src="/logo.png"
               title="Rubix Studios logo"
               width={30}
             />

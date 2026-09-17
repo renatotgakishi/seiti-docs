@@ -1,0 +1,115 @@
+---
+title: Instalação do Payload
+description: Crie o projeto do zero, configure o banco e faça o primeiro build passar
+---
+
+Vamos criar o projeto do portfólio do zero. No final você terá o Payload em /admin e o Next em /.
+
+## Pré-requisitos
+
+| Item | Versão mínima | Como verificar |
+| :--- | :--- | :--- |
+| Node.js | 20.9+ | node -v |
+| npm | 10+ | npm -v |
+| Banco | MongoDB Atlas ou Postgres | Vamos criar agora |
+
+<Note type="info" title="Qual banco usar?">
+Para portfólio recomendo MongoDB Atlas (gratuito) para começar rápido. Para produção use Postgres (Neon/Supabase).
+</Note>
+
+## Passo 1 - Criar o projeto
+
+```bash
+npx create-payload-app@latest meu-portfolio -t website
+cd meu-portfolio
+npm run dev
+```
+
+Selecione:
+- Database: MongoDB
+- Template: website
+
+## Passo 2 - Configure o .env
+
+Crie o arquivo .env na raiz:
+
+```bash
+PAYLOAD_SECRET=seu-secret-super-seguro-aqui-32chars
+DATABASE_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/meu-portfolio
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+```
+
+## Passo 3 - Primeiro acesso
+
+```bash
+npm run dev
+```
+
+Abra http://localhost:3000/admin e crie seu primeiro usuário.
+
+## Passo 4 - Ajustar o payload.config.ts
+
+Esse arquivo causa 90% dos erros Module not found. Use alias absoluto @/.
+
+```ts
+// src/payload.config.ts
+import { buildConfig } from 'payload'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildConfig({
+  secret: process.env.PAYLOAD_SECRET!,
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI!,
+  }),
+  editor: lexicalEditor({}),
+  collections: [],
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+})
+```
+
+<Note type="warning" title="Erro comum">
+Nunca use ../../blocks/ContatoBlock. Sempre use @/blocks/ContatoBlock/config.
+</Note>
+
+## Passo 5 - Estrutura inicial
+
+```bash
+src/
+├── blocks/
+│   ├── HomeBlock/
+│   ├── SobreBlock/
+│   ├── ServicosBlock/
+│   ├── TrabalhosBlock/
+│   ├── DepoimentosBlock/
+│   ├── BlogBlock/
+│   └── ContatoBlock/
+├── collections/
+│   ├── Pages.ts
+│   └── Media.ts
+└── payload.config.ts
+```
+
+## Validação
+
+```bash
+npm run generate:types
+npm run build
+```
+
+<Note type="success" title="Checkpoint">
+Ao final você deve conseguir acessar:
+- http://localhost:3000 = Site vazio
+- http://localhost:3000/admin = Painel do Payload
+</Note>
+
+<CardGrid>
+  <Card title="Proximo: Configuracao Next.js" href="/portfolio/03-configuracao-next" description="Configurar App Router, CSS Modules e alias" icon="ArrowRight" />
+</CardGrid>

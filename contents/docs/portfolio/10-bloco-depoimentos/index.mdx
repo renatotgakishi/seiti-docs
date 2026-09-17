@@ -1,0 +1,53 @@
+---
+title: Bloco Depoimentos
+description: Carrossel de depoimentos de clientes
+---
+
+## Configuração
+
+```ts
+export const DepoimentosBlock: Block = {
+  slug: 'depoimentosBlock',
+  interfaceName: 'DepoimentosBlockType',
+  fields: [
+    {
+      name: 'depoimentos',
+      type: 'array',
+      fields: [
+        { name: 'nome', type: 'text', required: true },
+        { name: 'cargo', type: 'text' },
+        { name: 'texto', type: 'textarea', required: true },
+        { name: 'foto', type: 'upload', relationTo: 'media' },
+        { name: 'nota', type: 'number', min: 1, max: 5, defaultValue: 5 },
+      ],
+    },
+  ],
+}
+```
+
+## Componente com Carrossel Simples
+
+```tsx
+'use client'
+import { useState } from 'react'
+
+export const DepoimentosBlockComponent = ({ depoimentos }) => {
+  const [ativo, setAtivo] = useState(0)
+  return (
+    <section>
+      <p>"{depoimentos[ativo]?.texto}"</p>
+      <strong>{depoimentos[ativo]?.nome}</strong>
+      <span>{depoimentos[ativo]?.cargo}</span>
+      <div>
+        {depoimentos?.map((_, i) => (
+          <button key={i} onClick={() => setAtivo(i)}>{i+1}</button>
+        ))}
+      </div>
+    </section>
+  )
+}
+```
+
+<CardGrid>
+  <Card title="Próximo: Blog + Contato" href="/portfolio/11-bloco-blog" description="Blog com Lexical + formulário" icon="ArrowRight" />
+</CardGrid>

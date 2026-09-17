@@ -1,0 +1,74 @@
+---
+title: Bloco Blog e Contato
+description: Dois blocos em um capítulo - listagem de posts e formulário que salva no Payload
+---
+
+## Parte 1 - BlogBlock
+
+```ts
+export const BlogBlock: Block = {
+  slug: 'blogBlock',
+  interfaceName: 'BlogBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', defaultValue: 'Últimos artigos' },
+    { name: 'quantidade', type: 'number', defaultValue: 3, max: 9 },
+  ],
+}
+```
+
+O Blog puxa de uma Collection separada `Posts`.
+
+## Parte 2 - ContatoBlock (o que mais dá erro)
+
+<Note type="warning" title="O erro Module not found que você teve">
+`Can't resolve '../../blocks/ContatoBlock'` acontece aqui. Use @/.
+</Note>
+
+```ts
+// src/blocks/ContatoBlock/config.ts
+export const ContatoBlock: Block = {
+  slug: 'contatoBlock',
+  interfaceName: 'ContatoBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', defaultValue: 'Vamos conversar?' },
+    { name: 'email', type: 'email', required: true },
+    { name: 'whatsapp', type: 'text' },
+  ],
+}
+```
+
+### Formulário que salva no Payload
+
+Crie uma Collection `Mensagens`:
+
+```ts
+export const Mensagens: CollectionConfig = {
+  slug: 'mensagens',
+  fields: [
+    { name: 'nome', type: 'text', required: true },
+    { name: 'email', type: 'email', required: true },
+    { name: 'mensagem', type: 'textarea', required: true },
+  ],
+}
+```
+
+```tsx
+'use client'
+export const ContatoBlockComponent = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    await fetch('/api/mensagens', {
+      method: 'POST',
+      body: JSON.stringify(Object.fromEntries(formData)),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    alert('Mensagem enviada!')
+  }
+  return <form onSubmit={handleSubmit}>...</form>
+}
+```
+
+<CardGrid>
+  <Card title="Próximo: Montagem Pages" href="/portfolio/13-montagem-pages" description="Juntar todos os blocos" icon="ArrowRight" />
+</CardGrid>

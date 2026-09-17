@@ -1,0 +1,45 @@
+---
+title: Deploy
+description: Como fazer deploy na Vercel com Payload + MongoDB Atlas
+---
+
+## Checklist Final
+
+<Steps>
+  <Step title="Variáveis de ambiente">
+    Na Vercel adicione:
+    - PAYLOAD_SECRET
+    - DATABASE_URI
+    - NEXT_PUBLIC_SERVER_URL
+  </Step>
+  <Step title="Build Command">
+    `npm run build` - o Payload precisa gerar os types no build
+  </Step>
+  <Step title="Teste em produção">
+    Acesse seu-dominio.vercel.app/admin e crie a primeira Page
+  </Step>
+</Steps>
+
+## Comandos
+
+```bash
+npm run generate:types
+npm run build
+vercel --prod
+```
+
+<FileTree>
+  <Folder name="Deploy" defaultOpen={true}>
+    <File name="Vercel" />
+    <File name="MongoDB Atlas" />
+    <File name="Payload Cloud" />
+  </Folder>
+</FileTree>
+
+<Note type="success" title="Parabéns!">
+Você construiu um portfólio completo, editável pelo cliente, com 7 blocos, SEO dinâmico e deploy. Agora é só adicionar projetos reais no /admin.
+</Note>
+
+<CardGrid>
+  <Card title="Voltar ao Início" href="/portfolio/01-introducao" description="Rever a introdução" icon="Book" />
+</CardGrid>

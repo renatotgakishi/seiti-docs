@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "contents/docs/portfolio/03-configuracao-next/index.mdx"  ],
   "exclude": ["node_modules"]
 }

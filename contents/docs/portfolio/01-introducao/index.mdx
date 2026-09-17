@@ -1,0 +1,73 @@
+---
+title: Introdução
+description: Visão geral do projeto - o que vamos construir, por que Payload + Next.js e como usar esta documentação
+---
+
+Bem-vindo à documentação completa para construir um **portfólio profissional, editável e performático** usando **Payload CMS 3.0 + Next.js 15 + TypeScript**.
+
+Essa documentação nasceu de problemas reais: erros de importação de Blocks, CSS que não aplicava, e falta de conteúdo em português sobre Payload.
+
+## O que vamos construir
+
+Um site de portfólio completo com 7 blocos editáveis pelo cliente no painel do Payload.
+
+<CardGrid>
+  <Card title="Home / Hero" href="/portfolio/06-bloco-home" description="Primeira dobra com CTA e imagem editável" icon="Rocket" />
+  <Card title="Sobre" href="/portfolio/07-bloco-sobre" description="Biografia com layout flex" icon="User" />
+  <Card title="Serviços" href="/portfolio/08-bloco-servicos" description="Array de serviços com ícones" icon="Briefcase" />
+  <Card title="Trabalhos" href="/portfolio/09-bloco-trabalhos" description="Grid de projetos com filtro" icon="Layout" />
+  <Card title="Depoimentos" href="/portfolio/10-bloco-depoimentos" description="Carrossel de clientes" icon="MessageCircle" />
+  <Card title="Blog + Contato" href="/portfolio/11-bloco-blog" description="Posts com Lexical + formulário" icon="Mail" />
+</CardGrid>
+
+<Note type="info" title="Para quem é esta documentação?">
+  Para devs que já sabem React/Next básico e querem sair do WordPress/ACF. Se você já tomou `Module not found: Can't resolve '../../blocks/ContatoBlock'`, você está no lugar certo.
+</Note>
+
+## Por que Payload + Next.js?
+
+<Tabs defaultValue="payload">
+  <TabsList>
+    <TabsTrigger value="payload">Payload vs Strapi/WordPress</TabsTrigger>
+    <TabsTrigger value="next">Por que Next App Router</TabsTrigger>
+  </TabsList>
+  <TabsContent value="payload">
+    - **Tudo é TypeScript:** Collections e Blocks geram tipos automaticamente
+    - **Sem lock-in:** Você controla o banco
+    - **Blocks nativos:** Perfeito para page builder como `SobreBlock`, `ServicosBlock`
+  </TabsContent>
+  <TabsContent value="next">
+    - **RSC + Server Actions:** Busca dados do Payload direto no server
+    - **CSS Module suportado:** Solução para `import './styles.css'` que não funciona
+    - **Image Optimization + SEO:** `generateMetadata` puxando do Payload
+  </TabsContent>
+</Tabs>
+
+## Stack final
+
+| Tecnologia | Versão | Uso |
+| :--- | :--- | :--- |
+| Next.js | 16.3.5 | Framework + Turbopack |
+| Payload CMS | 3.x | CMS Headless |
+| TypeScript | 5.x | Tipagem total |
+| Tailwind CSS | 4.x | Estilização |
+| MongoDB / Postgres | - | Banco |
+
+## Estrutura que vamos criar
+
+```bash
+src/
+├── blocks/
+│   ├── SobreBlock/
+│   │   ├── config.ts
+│   │   ├── Component.tsx
+│   │   └── styles.module.css
+│   └── RenderBlocks.tsx
+├── collections/
+│   ├── Pages.ts
+│   └── Media.ts
+└── payload.config.ts
+
+contents/docs/portfolio/
+├── 01-introducao/
+└── 02-instalacao-payload/

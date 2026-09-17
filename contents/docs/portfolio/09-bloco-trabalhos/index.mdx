@@ -1,0 +1,64 @@
+---
+title: Bloco Trabalhos
+description: Portfólio de projetos com imagem, tags e link externo
+---
+
+## Configuração
+
+```ts
+export const TrabalhosBlock: Block = {
+  slug: 'trabalhosBlock',
+  interfaceName: 'TrabalhosBlockType',
+  fields: [
+    { name: 'titulo', type: 'text', defaultValue: 'Trabalhos recentes' },
+    {
+      name: 'projetos',
+      type: 'array',
+      fields: [
+        { name: 'titulo', type: 'text', required: true },
+        { name: 'categoria', type: 'text' },
+        { name: 'imagem', type: 'upload', relationTo: 'media', required: true },
+        { name: 'link', type: 'text' },
+        { name: 'destaque', type: 'checkbox', defaultValue: false },
+      ],
+    },
+  ],
+}
+```
+
+## Filtro no Frontend
+
+```tsx
+'use client'
+import { useState } from 'react'
+
+export const TrabalhosBlockComponent = ({ projetos }) => {
+  const [filtro, setFiltro] = useState('todos')
+  const filtrados = filtro === 'todos' ? projetos : projetos.filter(p => p.categoria === filtro)
+  
+  return (
+    <section id="trabalhos">
+      <div>
+        <button onClick={() => setFiltro('todos')}>Todos</button>
+        <button onClick={() => setFiltro('branding')}>Branding</button>
+      </div>
+      <div className="grid">
+        {filtrados?.map((proj, i) => (
+          <a key={i} href={proj.link} target="_blank">
+            <img src={proj.imagem.url} alt={proj.titulo} />
+            <h3>{proj.titulo}</h3>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+```
+
+<Note type="warning" title="Imagem obrigatória">
+Sempre coloque `required: true` na imagem de trabalho. Portfólio sem imagem quebra o grid.
+</Note>
+
+<CardGrid>
+  <Card title="Próximo: Depoimentos" href="/portfolio/10-bloco-depoimentos" description="Prova social com carrossel" icon="ArrowRight" />
+</CardGrid>

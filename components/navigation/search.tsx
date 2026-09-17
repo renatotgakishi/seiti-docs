@@ -117,7 +117,7 @@ export function Search() {
           <LuSearch className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-500 dark:text-neutral-400" />
           <Input
             className="h-9 w-full rounded-md border bg-background pr-4 pl-10 text-sm shadow md:w-full"
-            placeholder="Search"
+            placeholder="Pesquisar"
             type="search"
           />
         </div>
@@ -154,33 +154,33 @@ export function Search() {
           <div className="flex w-full flex-col items-start px-1 pt-1 pb-4 sm:px-3">
             {searchedInput
               ? results.map((item) => {
-                  if ('href' in item) {
-                    return (
-                      <DialogClose asChild key={item.href}>
-                        <Anchor
-                          className={cn(
-                            'flex w-full max-w-77.5 flex-col gap-0.5 rounded-sm p-3 text-[15px] transition-all duration-300 hover:bg-neutral-100 sm:max-w-120 dark:hover:bg-neutral-900'
-                          )}
-                          href={`/docs${item.href}`}
-                        >
-                          <div className="flex h-full items-center gap-x-2">
-                            <LuFileText className="h-[1.1rem] w-[1.1rem]" />
-                            <span className="truncate">{item.title}</span>
-                          </div>
-                          {'snippet' in item && item.snippet && (
-                            <p
-                              className="truncate text-xs text-neutral-500 dark:text-neutral-400"
-                              dangerouslySetInnerHTML={{
-                                __html: highlight(item.snippet, searchedInput),
-                              }}
-                            />
-                          )}
-                        </Anchor>
-                      </DialogClose>
-                    )
-                  }
-                  return null
-                })
+                if ('href' in item) {
+                  return (
+                    <DialogClose asChild key={item.href}>
+                      <Anchor
+                        className={cn(
+                          'flex w-full max-w-77.5 flex-col gap-0.5 rounded-sm p-3 text-[15px] transition-all duration-300 hover:bg-neutral-100 sm:max-w-120 dark:hover:bg-neutral-900'
+                        )}
+                        href={`/docs${item.href}`}
+                      >
+                        <div className="flex h-full items-center gap-x-2">
+                          <LuFileText className="h-[1.1rem] w-[1.1rem]" />
+                          <span className="truncate">{item.title}</span>
+                        </div>
+                        {'snippet' in item && item.snippet && (
+                          <p
+                            className="truncate text-xs text-neutral-500 dark:text-neutral-400"
+                            dangerouslySetInnerHTML={{
+                              __html: highlight(item.snippet, searchedInput),
+                            }}
+                          />
+                        )}
+                      </Anchor>
+                    </DialogClose>
+                  )
+                }
+                return null
+              })
               : renderDocuments(Documents)}
           </div>
         </ScrollArea>

@@ -1,0 +1,58 @@
+---
+title: SEO e Performance
+description: Metadata dinâmica puxando do Payload e otimização de imagens
+---
+
+## SEO Dinâmico
+
+```tsx
+// src/app/(frontend)/[slug]/page.tsx
+export async function generateMetadata({ params }) {
+  const payload = await getPayload({ config })
+  const page = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: params.slug } },
+  })
+  
+  return {
+    title: page.docs[0]?.title,
+    description: page.docs[0]?.meta?.description,
+    openGraph: {
+      images: [page.docs[0]?.meta?.image?.url],
+    },
+  }
+}
+```
+
+## Adicione campo SEO no Pages.ts
+
+```ts
+{
+  name: 'meta',
+  type: 'group',
+  fields: [
+    { name: 'title', type: 'text' },
+    { name: 'description', type: 'textarea' },
+    { name: 'image', type: 'upload', relationTo: 'media' },
+  ],
+}
+```
+
+## Performance
+
+<Tabs defaultValue="imagem">
+  <TabsList>
+    <TabsTrigger value="imagem">Imagens</TabsTrigger>
+    <TabsTrigger value="font">Fonts</TabsTrigger>
+  </TabsList>
+  <TabsContent value="imagem">
+    Sempre use `next/image` com width/height. O Payload já retorna url otimizada.
+  </TabsContent>
+  <TabsContent value="font">
+    Use `next/font/google` - evita CLS.
+  </TabsContent>
+</Tabs>
+
+<CardGrid>
+  <Card title="Próximo: Deploy" href="/portfolio/15-deploy" description="Subir para produção" icon="ArrowRight" />
+</CardGrid>
