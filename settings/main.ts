@@ -1,4 +1,4 @@
-export const url = 'https://seiti.com.br'
+export const url = 'https://doc.seiti.com.br'
 export const siteicon = '/icon.png'
 
 export const gtm = 'GTM-XXXXXXX'

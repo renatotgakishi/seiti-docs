@@ -3,7 +3,7 @@ import { PageRoutes } from '@/lib/pageroutes'
 import { Settings } from '@/types/settings'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = Settings.metadataBase || 'https://seiti.com.br'
+  const baseUrl = Settings.metadataBase || 'https://doc.seiti.com.br'
 
   const blacklist = [
     '/structure',
